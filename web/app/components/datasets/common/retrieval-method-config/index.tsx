@@ -38,69 +38,23 @@ const RetrievalMethodConfig: FC<Props> = ({
   })()
   return (
     <div className='space-y-2'>
-      {supportRetrievalMethods.includes(RETRIEVE_METHOD.semantic) && (
-        <RadioCard
-          icon={<Semantic className='w-4 h-4 text-[#7839EE]' />}
-          title={t('dataset.retrieval.semantic_search.title')}
-          description={t('dataset.retrieval.semantic_search.description')}
-          isChosen={value.search_method === RETRIEVE_METHOD.semantic}
-          onChosen={() => onChange({
-            ...value,
-            search_method: RETRIEVE_METHOD.semantic,
-          })}
-          chosenConfig={
-            <RetrievalParamConfig
-              type={RETRIEVE_METHOD.semantic}
-              value={value}
-              onChange={onChange}
-            />
-          }
-        />
-      )}
-      {supportRetrievalMethods.includes(RETRIEVE_METHOD.semantic) && (
-        <RadioCard
-          icon={<FileSearch02 className='w-4 h-4 text-[#7839EE]' />}
-          title={t('dataset.retrieval.full_text_search.title')}
-          description={t('dataset.retrieval.full_text_search.description')}
-          isChosen={value.search_method === RETRIEVE_METHOD.fullText}
-          onChosen={() => onChange({
-            ...value,
-            search_method: RETRIEVE_METHOD.fullText,
-          })}
-          chosenConfig={
-            <RetrievalParamConfig
-              type={RETRIEVE_METHOD.fullText}
-              value={value}
-              onChange={onChange}
-            />
-          }
-        />
-      )}
-      {supportRetrievalMethods.includes(RETRIEVE_METHOD.semantic) && (
-        <RadioCard
-          icon={<PatternRecognition className='w-4 h-4 text-[#7839EE]' />}
-          title={
-            <div className='flex items-center space-x-1'>
-              <div>{t('dataset.retrieval.hybrid_search.title')}</div>
-              <div className='flex h-full items-center px-1.5 rounded-md border border-[#E0EAFF] text-xs font-medium text-[#444CE7]'>{t('dataset.retrieval.hybrid_search.recommend')}</div>
-            </div>
-          }
-          description={t('dataset.retrieval.hybrid_search.description')}
-          isChosen={value.search_method === RETRIEVE_METHOD.hybrid}
-          onChosen={() => onChange({
-            ...value,
-            search_method: RETRIEVE_METHOD.hybrid,
-            reranking_enable: true,
-          })}
-          chosenConfig={
-            <RetrievalParamConfig
-              type={RETRIEVE_METHOD.hybrid}
-              value={value}
-              onChange={onChange}
-            />
-          }
-        />
-      )}
+      <RadioCard
+        icon={<Semantic className='w-4 h-4 text-[#7839EE]' />}
+        title={t('dataset.retrieval.semantic_search.title')}
+        description={t('dataset.retrieval.semantic_search.description')}
+        isChosen={value.search_method === RETRIEVE_METHOD.semantic}
+        onChosen={() => onChange({
+          ...value,
+          search_method: RETRIEVE_METHOD.semantic,
+        })}
+        chosenConfig={
+          <RetrievalParamConfig
+            type={RETRIEVE_METHOD.semantic}
+            value={value}
+            onChange={onChange}
+          />
+        }
+      />
     </div>
   )
 }

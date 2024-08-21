@@ -11,7 +11,6 @@ import { OperationAction, StatusItem } from '../list'
 import s from '../style.module.css'
 import Completed from './completed'
 import Embedding from './embedding'
-import Metadata from './metadata'
 import SegmentAdd, { ProcessStatus } from './segment-add'
 import BatchModal from './batch-modal'
 import style from './style.module.css'
@@ -131,10 +130,6 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
     <DocumentContext.Provider value={{ datasetId, documentId, docForm: documentDetail?.doc_form || '' }}>
       <div className='flex flex-col h-full'>
         <div className='flex min-h-16 border-b-gray-100 border-b items-center p-4 justify-between flex-wrap gap-y-2'>
-          <div onClick={backToPrev} className={'shrink-0 rounded-full w-8 h-8 flex justify-center items-center border-gray-100 cursor-pointer border hover:border-gray-300 shadow-[0px_12px_16px_-4px_rgba(16,24,40,0.08),0px_4px_6px_-2px_rgba(16,24,40,0.03)]'}>
-            <ArrowLeftIcon className='text-primary-600 fill-current stroke-current h-4 w-4' />
-          </div>
-          <Divider className='!h-4' type='vertical' />
           <DocumentTitle extension={documentDetail?.data_source_info?.upload_file?.extension} name={documentDetail?.name} />
           <div className='flex items-center flex-wrap gap-y-2'>
             <StatusItem status={documentDetail?.display_status || 'available'} scene='detail' errorMessage={documentDetail?.error || ''} />
@@ -161,10 +156,6 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
               onUpdate={handleOperate}
               className='!w-[216px]'
             />
-            <button
-              className={cn(style.layoutRightIcon, showMetadata ? style.iconShow : style.iconClose)}
-              onClick={() => setShowMetadata(!showMetadata)}
-            />
           </div>
         </div>
         <div className='flex flex-row flex-1' style={{ height: 'calc(100% - 4rem)' }}>
@@ -184,11 +175,11 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
             </div>
           }
           <FloatRightContainer showClose isOpen={showMetadata} onClose={() => setShowMetadata(false)} isMobile={isMobile} panelClassname='!justify-start' footer={null}>
-            <Metadata
-              docDetail={{ ...documentDetail, ...documentMetadata, doc_type: documentMetadata?.doc_type === 'others' ? '' : documentMetadata?.doc_type } as any}
-              loading={isMetadataLoading}
-              onUpdate={metadataMutate}
-            />
+            {/*<Metadata*/}
+            {/*  docDetail={{ ...documentDetail, ...documentMetadata, doc_type: documentMetadata?.doc_type === 'others' ? '' : documentMetadata?.doc_type } as any}*/}
+            {/*  loading={isMetadataLoading}*/}
+            {/*  onUpdate={metadataMutate}*/}
+            {/*/>*/}
           </FloatRightContainer>
         </div>
         <BatchModal

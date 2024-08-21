@@ -3,36 +3,29 @@
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
-import {
-  RiHammerFill,
-  RiHammerLine,
-} from '@remixicon/react'
+import { RiUser5Fill } from '@remixicon/react'
 import classNames from '@/utils/classnames'
 type ToolsNavProps = {
   className?: string
 }
 
-const ToolsNav = ({
+const MembersNav = ({
   className,
 }: ToolsNavProps) => {
   const { t } = useTranslation()
   const selectedSegment = useSelectedLayoutSegment()
-  const actived = selectedSegment === 'tools'
+  const actived = selectedSegment === 'members'
 
   return (
-    <Link href="/tools" className={classNames(
+    <Link href="/members" className={classNames(
       className, 'group',
-      actived && 'bg-white shadow-md',
+      actived && 'bg-white font-bold',
       actived ? 'text-primary-600' : 'text-gray-500 hover:bg-gray-200',
     )}>
-      {
-        actived
-          ? <RiHammerFill className='mr-2 w-4 h-4' />
-          : <RiHammerLine className='mr-2 w-4 h-4' />
-      }
-      {t('common.menus.tools')}
+      <RiUser5Fill className='mr-2 w-4 h-4' />
+      用户列表
     </Link>
   )
 }
 
-export default ToolsNav
+export default MembersNav

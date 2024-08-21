@@ -38,7 +38,7 @@ const EmptyDatasetCreationModal = ({
     try {
       const dataset = await createEmptyDataset({ name: inputValue })
       onHide()
-      router.push(`/datasets/${dataset.id}/documents`)
+      router.push(`/datasets/${dataset.id}/documents/212`)
     }
     catch (err) {
       notify({ type: 'error', message: t('datasetCreation.stepOne.modal.failed') })
@@ -55,14 +55,14 @@ const EmptyDatasetCreationModal = ({
         <div className={s.title}>{t('datasetCreation.stepOne.modal.title')}</div>
         <span className={s.close} onClick={onHide} />
       </div>
-      <div className={s.tip}>{t('datasetCreation.stepOne.modal.tip')}</div>
+      <div className={s.tip}>空知识库中还没有问答，你稍后添加问答至该知识库。</div>
       <div className={s.form}>
         <div className={s.label}>{t('datasetCreation.stepOne.modal.input')}</div>
         <Input className='!h-8' value={inputValue} placeholder={t('datasetCreation.stepOne.modal.placeholder') || ''} onChange={setInputValue} />
       </div>
       <div className='flex flex-row-reverse'>
-        <Button className='w-24 ml-2' variant='primary' onClick={submit}>{t('datasetCreation.stepOne.modal.confirmButton')}</Button>
-        <Button className='w-24' onClick={onHide}>{t('datasetCreation.stepOne.modal.cancelButton')}</Button>
+        <Button className='w-24 ml-2' variant='primary' onClick={submit}>创建</Button>
+        <Button className='w-24' onClick={onHide}>取消</Button>
       </div>
     </Modal>
   )

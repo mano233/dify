@@ -4,21 +4,13 @@ import React, { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import useSWR from 'swr'
 import { useTranslation } from 'react-i18next'
-import { useBoolean } from 'ahooks'
 import {
   Cog8ToothIcon,
   // CommandLineIcon,
-  Squares2X2Icon,
-  // eslint-disable-next-line sort-imports
-  PuzzlePieceIcon,
-  DocumentTextIcon,
-  PaperClipIcon,
-  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 import {
   Cog8ToothIcon as Cog8ToothSolidIcon,
   // CommandLineIcon as CommandLineSolidIcon,
-  DocumentTextIcon as DocumentTextSolidIcon,
 } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import s from './style.module.css'
@@ -26,18 +18,14 @@ import classNames from '@/utils/classnames'
 import { fetchDatasetDetail, fetchDatasetRelatedApps } from '@/service/datasets'
 import type { RelatedApp, RelatedAppResponse } from '@/models/datasets'
 import AppSideBar from '@/app/components/app-sidebar'
-import Divider from '@/app/components/base/divider'
 import AppIcon from '@/app/components/base/app-icon'
 import Loading from '@/app/components/base/loading'
-import FloatPopoverContainer from '@/app/components/base/float-popover-container'
 import DatasetDetailContext from '@/context/dataset-detail'
 import { DataSourceType } from '@/models/datasets'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
-import { LanguagesSupported } from '@/i18n/language'
 import { useStore } from '@/app/components/app/store'
 import { AiText, ChatBot, CuteRobote } from '@/app/components/base/icons/src/vender/solid/communication'
 import { Route } from '@/app/components/base/icons/src/vender/solid/mapsAndTravel'
-import { getLocaleOnClient } from '@/i18n'
 import { useAppContext } from '@/context/app-context'
 
 export type IAppDetailLayoutProps = {
@@ -119,67 +107,6 @@ type IExtraInfoProps = {
   relatedApps?: RelatedAppResponse
 }
 
-const ExtraInfo = ({ isMobile, relatedApps }: IExtraInfoProps) => {
-  const locale = getLocaleOnClient()
-  const [isShowTips, { toggle: toggleTips, set: setShowTips }] = useBoolean(!isMobile)
-  const { t } = useTranslation()
-
-  useEffect(() => {
-    setShowTips(!isMobile)
-  }, [isMobile, setShowTips])
-
-  return <div className='w-full flex flex-col items-center'>
-    <Divider className='mt-5' />
-    {(relatedApps?.data && relatedApps?.data?.length > 0) && (
-      <>
-        {!isMobile && <div className='w-full px-2 pb-1 pt-4 uppercase text-xs text-gray-500 font-medium'>{relatedApps?.total || '--'} {t('common.datasetMenus.relatedApp')}</div>}
-        {isMobile && <div className={classNames(s.subTitle, 'flex items-center justify-center !px-0 gap-1')}>
-          {relatedApps?.total || '--'}
-          <PaperClipIcon className='h-4 w-4 text-gray-700' />
-        </div>}
-        {relatedApps?.data?.map((item, index) => (<LikedItem key={index} isMobile={isMobile} detail={item} />))}
-      </>
-    )}
-    {!relatedApps?.data?.length && (
-      <FloatPopoverContainer
-        placement='bottom-start'
-        open={isShowTips}
-        toggle={toggleTips}
-        isMobile={isMobile}
-        triggerElement={
-          <div className={classNames('h-7 w-7 inline-flex justify-center items-center rounded-lg bg-transparent', isShowTips && '!bg-gray-50')}>
-            <QuestionMarkCircleIcon className='h-4 w-4 flex-shrink-0 text-gray-500' />
-          </div>
-        }
-      >
-        <div className={classNames('mt-5 p-3', isMobile && 'border-[0.5px] border-gray-200 shadow-lg rounded-lg bg-white w-[160px]')}>
-          <div className='flex items-center justify-start gap-2'>
-            <div className={s.emptyIconDiv}>
-              <Squares2X2Icon className='w-3 h-3 text-gray-500' />
-            </div>
-            <div className={s.emptyIconDiv}>
-              <PuzzlePieceIcon className='w-3 h-3 text-gray-500' />
-            </div>
-          </div>
-          <div className='text-xs text-gray-500 mt-2'>{t('common.datasetMenus.emptyTip')}</div>
-          <a
-            className='inline-flex items-center text-xs text-primary-600 mt-2 cursor-pointer'
-            href={
-              locale === LanguagesSupported[1]
-                ? 'https://docs.dify.ai/v/zh-hans/guides/knowledge-base/integrate_knowledge_within_application'
-                : 'https://docs.dify.ai/guides/knowledge-base/integrate-knowledge-within-application'
-            }
-            target='_blank' rel='noopener noreferrer'
-          >
-            <BookOpenIcon className='mr-1' />
-            {t('common.datasetMenus.viewDoc')}
-          </a>
-        </div>
-      </FloatPopoverContainer>
-    )}
-  </div>
-}
-
 const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
   const {
     children,
@@ -204,7 +131,6 @@ const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
   }, apiParams => fetchDatasetRelatedApps(apiParams.datasetId))
 
   const navigation = [
-    { name: t('common.datasetMenus.documents'), href: `/datasets/${datasetId}/documents`, icon: DocumentTextIcon, selectedIcon: DocumentTextSolidIcon },
     { name: t('common.datasetMenus.hitTesting'), href: `/datasets/${datasetId}/hitTesting`, icon: TargetIcon, selectedIcon: TargetSolidIcon },
     // { name: 'api & webhook', href: `/datasets/${datasetId}/api`, icon: CommandLineIcon, selectedIcon: CommandLineSolidIcon },
     { name: t('common.datasetMenus.settings'), href: `/datasets/${datasetId}/settings`, icon: Cog8ToothIcon, selectedIcon: Cog8ToothSolidIcon },
@@ -234,7 +160,7 @@ const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
         icon_background={datasetRes?.icon_background || '#F5F5F5'}
         desc={datasetRes?.description || '--'}
         navigation={navigation}
-        extraInfo={!isCurrentWorkspaceDatasetOperator ? mode => <ExtraInfo isMobile={mode === 'collapse'} relatedApps={relatedApps} /> : undefined}
+        extraInfo={ undefined}
         iconType={datasetRes?.data_source_type === DataSourceType.NOTION ? 'notion' : 'dataset'}
       />}
       <DatasetDetailContext.Provider value={{

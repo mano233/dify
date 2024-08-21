@@ -10,7 +10,6 @@ import type { MetadataType } from '@/service/datasets'
 import { fetchDocumentDetail } from '@/service/datasets'
 
 import Loading from '@/app/components/base/loading'
-import StepTwo from '@/app/components/datasets/create/step-two'
 import AccountSetting from '@/app/components/header/account-setting'
 import AppUnavailable from '@/app/components/base/app-unavailable'
 import { useDefaultModel } from '@/app/components/header/account-setting/model-provider-page/hooks'
@@ -66,31 +65,7 @@ const DocumentSettings = ({ datasetId, documentId }: DocumentSettingsProps) => {
     <div className='flex' style={{ height: 'calc(100vh - 56px)' }}>
       <div className="grow bg-white">
         {!documentDetail && <Loading type='app' />}
-        {dataset && documentDetail && (
-          <StepTwo
-            isAPIKeySet={!!embeddingsDefaultModel}
-            onSetting={showSetAPIKey}
-            datasetId={datasetId}
-            dataSourceType={documentDetail.data_source_type}
-            notionPages={[currentPage]}
-            websitePages={[
-              {
-                title: documentDetail.name,
-                source_url: documentDetail.data_source_info?.url,
-                markdown: '',
-                description: '',
-              },
-            ]}
-            fireCrawlJobId={documentDetail.data_source_info?.job_id}
-            crawlOptions={documentDetail.data_source_info}
-            indexingType={indexingTechnique || ''}
-            isSetting
-            documentDetail={documentDetail}
-            files={[documentDetail.data_source_info.upload_file]}
-            onSave={saveHandler}
-            onCancel={cancelHandler}
-          />
-        )}
+        {dataset && documentDetail}
       </div>
       {isShowSetAPIKey && <AccountSetting activeTab="provider" onCancel={async () => {
         hideSetAPIkey()

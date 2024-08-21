@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { omit } from 'lodash-es'
 import { ArrowRightIcon } from '@heroicons/react/24/solid'
 import SegmentCard from '../completed/SegmentCard'
-import { FieldInfo } from '../metadata'
 import style from '../completed/style.module.css'
 import { DocumentContext } from '../index'
 import s from './style.module.css'
@@ -99,11 +98,10 @@ const RuleDetail: FC<{ sourceData?: ProcessRuleResponse; docName?: string }> = (
 
   return <div className='flex flex-col pt-8 pb-10 first:mt-0'>
     {Object.keys(segmentationRuleMap).map((field) => {
-      return <FieldInfo
-        key={field}
-        label={segmentationRuleMap[field as keyof typeof segmentationRuleMap]}
-        displayedValue={String(getValue(field))}
-      />
+      return (
+        // eslint-disable-next-line react/jsx-key
+        <div></div>
+      )
     })}
   </div>
 }

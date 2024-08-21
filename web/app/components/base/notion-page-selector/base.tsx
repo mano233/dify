@@ -6,7 +6,6 @@ import SearchInput from './search-input'
 import PageSelector from './page-selector'
 import cn from '@/utils/classnames'
 import { preImportNotionPages } from '@/service/datasets'
-import { NotionConnector } from '@/app/components/datasets/create/step-one'
 import type { DataSourceNotionPageMap, DataSourceNotionWorkspace, NotionPage } from '@/models/common'
 import { useModalContext } from '@/context/modal-context'
 
@@ -126,7 +125,7 @@ const NotionPageSelector = ({
             </>
           )
           : (
-            <NotionConnector onSetting={() => setShowAccountSettingModal({ payload: 'data-source', onCancelCallback: mutate })} />
+            <div></div>
           )
       }
     </div>

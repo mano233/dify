@@ -38,8 +38,8 @@ const Nav = ({
 
   return (
     <div className={`
-      flex items-center h-8 mr-0 sm:mr-3 px-0.5 rounded-xl text-sm shrink-0 font-medium
-      ${isActived && 'bg-components-main-nav-nav-button-bg-active shadow-md font-semibold'}
+      flex items-center h-8 mr-0 sm:mr-3 px-0.5 rounded-lg text-sm shrink-0 font-medium
+      ${isActived && 'bg-components-main-nav-nav-button-bg-active font-semibold'}
       ${!curNav && !isActived && 'hover:bg-components-main-nav-nav-button-bg-hover'}
     `}>
       <Link href={link}>

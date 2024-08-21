@@ -75,7 +75,7 @@ const SegmentAdd: FC<ISegmentAddProps> = ({
       btnElement={
         <div className='inline-flex items-center'>
           <FilePlus02 className='w-4 h-4 text-gray-700' />
-          <span className='pl-1'>{t('datasetDocuments.list.action.addButton')}</span>
+          <span className='pl-1'>添加分段111</span>
         </div>
       }
       btnClassName={open => cn('mr-2 !py-[6px] !text-[13px] !leading-[18px] hover:bg-gray-50 border border-gray-200 hover:border-gray-300 hover:shadow-[0_1px_2px_rgba(16,24,40,0.05)]', open ? '!bg-gray-100 !shadow-none' : '!bg-transparent')}

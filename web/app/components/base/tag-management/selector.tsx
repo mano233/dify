@@ -24,6 +24,7 @@ type TagSelectorProps = {
   value: string[]
   selectedTags: Tag[]
   onCacheUpdate: (tags: Tag[]) => void
+  disableManager?: boolean
   onChange?: () => void
 }
 
@@ -34,7 +35,7 @@ type PanelProps = {
 const Panel = (props: PanelProps) => {
   const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
-  const { targetID, type, value, selectedTags, onCacheUpdate, onChange, onCreate } = props
+  const { targetID, type, value, disableManager, selectedTags, onCacheUpdate, onChange, onCreate } = props
   const tagList = useTagStore(s => s.tagList)
   const setTagList = useTagStore(s => s.setTagList)
   const setShowTagManagementModal = useTagStore(s => s.setShowTagManagementModal)
@@ -199,16 +200,16 @@ const Panel = (props: PanelProps) => {
 }
 
 const TagSelector: FC<TagSelectorProps> = ({
-  targetID,
-  isPopover = true,
-  position,
-  type,
-  value,
-  selectedTags,
-  onCacheUpdate,
-  onChange,
-}) => {
-  const { t } = useTranslation()
+                                             targetID,
+                                             isPopover = true,
+                                             position,
+                                             type,
+                                             value,
+                                             selectedTags,
+                                             onCacheUpdate,
+                                             onChange,
+                                           }) => {
+  const {t} = useTranslation()
 
   const setTagList = useTagStore(s => s.setTagList)
 

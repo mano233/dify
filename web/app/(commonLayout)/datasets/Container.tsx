@@ -1,7 +1,7 @@
 'use client'
 
 // Libraries
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useDebounceFn } from 'ahooks'
@@ -11,10 +11,8 @@ import useSWR from 'swr'
 import Datasets from './Datasets'
 import DatasetFooter from './DatasetFooter'
 import ApiServer from './ApiServer'
-import Doc from './Doc'
 import TabSliderNew from '@/app/components/base/tab-slider-new'
 import SearchInput from '@/app/components/base/search-input'
-import TagManagementModal from '@/app/components/base/tag-management'
 import TagFilter from '@/app/components/base/tag-management/filter'
 
 // Services
@@ -24,6 +22,8 @@ import { fetchDatasetApiBaseUrl } from '@/service/datasets'
 import { useTabSearchParams } from '@/hooks/use-tab-searchparams'
 import { useStore as useTagStore } from '@/app/components/base/tag-management/store'
 import { useAppContext } from '@/context/app-context'
+import List from '@/app/components/members/list';
+import {DataSourceType} from "@/models/datasets";
 
 const Container = () => {
   const { t } = useTranslation()
@@ -62,12 +62,6 @@ const Container = () => {
     setTagFilterValue(value)
     handleTagsUpdate()
   }
-
-  useEffect(() => {
-    if (currentWorkspace.role === 'normal')
-      return router.replace('/apps')
-  }, [currentWorkspace])
-
   return (
     <div ref={containerRef} className='grow relative flex flex-col bg-gray-100 overflow-y-auto'>
       <div className='sticky top-0 flex justify-between pt-4 px-12 pb-2 leading-[56px] bg-gray-100 z-10 flex-wrap gap-y-2'>
@@ -84,18 +78,9 @@ const Container = () => {
         )}
         {activeTab === 'api' && data && <ApiServer apiBaseUrl={data.api_base_url || ''} />}
       </div>
+      <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords} />
+      <DatasetFooter />
 
-      {activeTab === 'dataset' && (
-        <>
-          <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords} />
-          <DatasetFooter />
-          {showTagManagementModal && (
-            <TagManagementModal type='knowledge' show={showTagManagementModal} />
-          )}
-        </>
-      )}
-
-      {activeTab === 'api' && data && <Doc apiBaseUrl={data.api_base_url || ''} />}
     </div>
 
   )

@@ -114,7 +114,7 @@ const DatasetCard = ({
         data-disable-nprogress={true}
         onClick={(e) => {
           e.preventDefault()
-          push(`/datasets/${dataset.id}/documents`)
+          push('/datasets/bb2026f9-8fa2-485c-beb5-06d436d37aac/documents/7e733d2a-c78d-42fe-a9fb-d680c49e499d')
         }}
       >
         <div className='flex pt-[14px] px-[14px] pb-3 h-[66px] items-center gap-3 grow-0 shrink-0'>
@@ -139,13 +139,10 @@ const DatasetCard = ({
             <div className='flex items-center mt-[1px] text-xs leading-[18px] text-gray-500'>
               <div
                 className={cn('truncate', (!dataset.embedding_available || !dataset.document_count) && 'opacity-50')}
-                title={`${dataset.document_count}${t('dataset.documentCount')} · ${Math.round(dataset.word_count / 1000)}${t('dataset.wordCount')} · ${dataset.app_count}${t('dataset.appCount')}`}
               >
-                <span>{dataset.document_count}{t('dataset.documentCount')}</span>
+                <span>{dataset.document_count} 个标准问答 </span>
                 <span className='shrink-0 mx-0.5 w-1 text-gray-400'>·</span>
-                <span>{Math.round(dataset.word_count / 1000)}{t('dataset.wordCount')}</span>
-                <span className='shrink-0 mx-0.5 w-1 text-gray-400'>·</span>
-                <span>{dataset.app_count}{t('dataset.appCount')}</span>
+                <span>{Math.round(dataset.word_count / 1000)} 字符</span>
               </div>
             </div>
           </div>

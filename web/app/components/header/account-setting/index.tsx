@@ -72,42 +72,10 @@ export default function AccountSetting({
       return []
     return [
       {
-        key: 'provider',
-        name: t('common.settings.provider'),
-        icon: <RiBox3Line className={iconClassName} />,
-        activeIcon: <RiBox3Fill className={iconClassName} />,
-      },
-      {
         key: 'members',
         name: t('common.settings.members'),
         icon: <RiGroup2Line className={iconClassName} />,
         activeIcon: <RiGroup2Fill className={iconClassName} />,
-      },
-      {
-        // Use key false to hide this item
-        key: enableBilling ? 'billing' : false,
-        name: t('common.settings.billing'),
-        description: t('billing.plansCommon.receiptInfo'),
-        icon: <RiMoneyDollarCircleLine className={iconClassName} />,
-        activeIcon: <RiMoneyDollarCircleFill className={iconClassName} />,
-      },
-      {
-        key: 'data-source',
-        name: t('common.settings.dataSource'),
-        icon: <RiDatabase2Line className={iconClassName} />,
-        activeIcon: <RiDatabase2Fill className={iconClassName} />,
-      },
-      {
-        key: 'api-based-extension',
-        name: t('common.settings.apiBasedExtension'),
-        icon: <RiPuzzle2Line className={iconClassName} />,
-        activeIcon: <RiPuzzle2Fill className={iconClassName} />,
-      },
-      {
-        key: (enableReplaceWebAppLogo || enableBilling) ? 'custom' : false,
-        name: t('custom.custom'),
-        icon: <RiColorFilterLine className={iconClassName} />,
-        activeIcon: <RiColorFilterFill className={iconClassName} />,
       },
     ].filter(item => !!item.key) as GroupItem[]
   })()
@@ -130,18 +98,6 @@ export default function AccountSetting({
           name: t('common.settings.account'),
           icon: <RiAccountCircleLine className={iconClassName} />,
           activeIcon: <RiAccountCircleFill className={iconClassName} />,
-        },
-        {
-          key: 'integrations',
-          name: t('common.settings.integrations'),
-          icon: <RiApps2AddLine className={iconClassName} />,
-          activeIcon: <RiApps2AddFill className={iconClassName} />,
-        },
-        {
-          key: 'language',
-          name: t('common.settings.language'),
-          icon: <RiTranslate2 className={iconClassName} />,
-          activeIcon: <RiTranslate2 className={iconClassName} />,
         },
       ],
     },

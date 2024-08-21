@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef} from 'react'
 import useSWRInfinite from 'swr/infinite'
 import { debounce } from 'lodash-es'
 import { useTranslation } from 'react-i18next'

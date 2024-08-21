@@ -4,9 +4,6 @@ import { useTranslation } from 'react-i18next'
 import AppUnavailable from '../../base/app-unavailable'
 import { ModelTypeEnum } from '../../header/account-setting/model-provider-page/declarations'
 import StepsNavBar from './steps-nav-bar'
-import StepOne from './step-one'
-import StepTwo from './step-two'
-import StepThree from './step-three'
 import { DataSourceType } from '@/models/datasets'
 import type { CrawlOptions, CrawlResultItem, DataSet, FileItem, createDocumentResponse } from '@/models/datasets'
 import { fetchDataSource } from '@/service/common'
@@ -121,48 +118,7 @@ const DatasetUpdateForm = ({ datasetId }: DatasetUpdateFormProps) => {
         <StepsNavBar step={step} datasetId={datasetId} />
       </div>
       <div className="grow bg-white">
-        <div className={step === 1 ? 'block h-full' : 'hidden'}>
-          <StepOne
-            hasConnection={hasConnection}
-            onSetting={() => setShowAccountSettingModal({ payload: 'data-source' })}
-            datasetId={datasetId}
-            dataSourceType={dataSourceType}
-            dataSourceTypeDisable={!!detail?.data_source_type}
-            changeType={setDataSourceType}
-            files={fileList}
-            updateFile={updateFile}
-            updateFileList={updateFileList}
-            notionPages={notionPages}
-            updateNotionPages={updateNotionPages}
-            onStepChange={nextStep}
-            websitePages={websitePages}
-            updateWebsitePages={setWebsitePages}
-            onFireCrawlJobIdChange={setFireCrawlJobId}
-            crawlOptions={crawlOptions}
-            onCrawlOptionsChange={setCrawlOptions}
-          />
-        </div>
-        {(step === 2 && (!datasetId || (datasetId && !!detail))) && <StepTwo
-          isAPIKeySet={!!embeddingsDefaultModel}
-          onSetting={() => setShowAccountSettingModal({ payload: 'provider' })}
-          indexingType={detail?.indexing_technique}
-          datasetId={datasetId}
-          dataSourceType={dataSourceType}
-          files={fileList.map(file => file.file)}
-          notionPages={notionPages}
-          websitePages={websitePages}
-          fireCrawlJobId={fireCrawlJobId}
-          onStepChange={changeStep}
-          updateIndexingTypeCache={updateIndexingTypeCache}
-          updateResultCache={updateResultCache}
-          crawlOptions={crawlOptions}
-        />}
-        {step === 3 && <StepThree
-          datasetId={datasetId}
-          datasetName={detail?.name}
-          indexingType={detail?.indexing_technique || indexingTypeCache}
-          creationCache={result}
-        />}
+        
       </div>
     </div>
   )

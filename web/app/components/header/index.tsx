@@ -6,21 +6,18 @@ import { useSelectedLayoutSegment } from 'next/navigation'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import HeaderBillingBtn from '../billing/header-billing-btn'
 import AccountDropdown from './account-dropdown'
-import AppNav from './app-nav'
 import DatasetNav from './dataset-nav'
 import EnvNav from './env-nav'
-import ExploreNav from './explore-nav'
-import ToolsNav from './tools-nav'
-import GithubStar from './github-star'
 import { WorkspaceProvider } from '@/context/workspace-context'
 import { useAppContext } from '@/context/app-context'
 import LogoSite from '@/app/components/base/logo/logo-site'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import { useProviderContext } from '@/context/provider-context'
 import { useModalContext } from '@/context/modal-context'
+import MembersNav from '@/app/components/header/member-nav';
 
 const navClassName = `
-  flex items-center relative mr-0 sm:mr-3 px-3 h-8 rounded-xl
+  flex items-center relative mr-0 sm:mr-3 px-3 h-8 rounded-lg
   font-medium text-sm
   cursor-pointer
 `
@@ -53,50 +50,31 @@ const Header = () => {
           className='flex items-center justify-center h-8 w-8 cursor-pointer'
           onClick={toggle}
         >
-          <Bars3Icon className="h-4 w-4 text-gray-500" />
+          <Bars3Icon className="h-4 w-4 text-gray-500"/>
         </div>}
         {!isMobile && <>
           <Link href="/apps" className='flex items-center mr-4'>
-            <LogoSite className='object-contain' />
+            <LogoSite className='object-contain'/>
           </Link>
-          <GithubStar />
         </>}
       </div>
-      {isMobile && (
-        <div className='flex'>
-          <Link href="/apps" className='flex items-center mr-4'>
-            <LogoSite />
-          </Link>
-          <GithubStar />
-        </div>
-      )}
-      {!isMobile && (
-        <div className='flex items-center'>
-          {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-          {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-          {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-          {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
-        </div>
-      )}
+      <div className='flex items-center'>
+        {!isCurrentWorkspaceDatasetOperator}
+        {!isCurrentWorkspaceDatasetOperator}
+        {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav/>}
+        {<MembersNav className={navClassName}/>}
+      </div>
       <div className='flex items-center flex-shrink-0'>
-        <EnvNav />
+        <EnvNav/>
         {enableBilling && (
           <div className='mr-3 select-none'>
-            <HeaderBillingBtn onClick={handlePlanClick} />
+            <HeaderBillingBtn onClick={handlePlanClick}/>
           </div>
         )}
         <WorkspaceProvider>
-          <AccountDropdown isMobile={isMobile} />
+          <AccountDropdown isMobile={isMobile}/>
         </WorkspaceProvider>
       </div>
-      {(isMobile && isShowNavMenu) && (
-        <div className='w-full flex flex-col p-2 gap-y-1'>
-          {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-          {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-          {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-          {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
-        </div>
-      )}
     </div>
   )
 }

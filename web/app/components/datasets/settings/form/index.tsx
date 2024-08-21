@@ -188,38 +188,6 @@ const Form = () => {
           </a>
         </div>
       </div>
-      <div className={rowClass}>
-        <div className={labelClass}>
-          <div>{t('datasetSettings.form.permissions')}</div>
-        </div>
-        <div className='w-full sm:w-[480px]'>
-          <PermissionSelector
-            disabled={!currentDataset?.embedding_available || isCurrentWorkspaceDatasetOperator}
-            permission={permission}
-            value={selectedMemberIDs}
-            onChange={v => setPermission(v)}
-            onMemberSelect={setSelectedMemberIDs}
-            memberList={memberList}
-          />
-        </div>
-      </div>
-      {currentDataset && currentDataset.indexing_technique && (
-        <>
-          <div className='w-full h-0 border-b-[0.5px] border-b-gray-200 my-2' />
-          <div className={rowClass}>
-            <div className={labelClass}>
-              <div>{t('datasetSettings.form.indexMethod')}</div>
-            </div>
-            <div className='w-full sm:w-[480px]'>
-              <IndexMethodRadio
-                disable={!currentDataset?.embedding_available}
-                value={indexMethod}
-                onChange={v => setIndexMethod(v)}
-              />
-            </div>
-          </div>
-        </>
-      )}
       {indexMethod === 'high_quality' && (
         <div className={rowClass}>
           <div className={labelClass}>
@@ -249,19 +217,10 @@ const Form = () => {
           </div>
         </div>
         <div className='w-[480px]'>
-          {indexMethod === 'high_quality'
-            ? (
-              <RetrievalMethodConfig
-                value={retrievalConfig}
-                onChange={setRetrievalConfig}
-              />
-            )
-            : (
-              <EconomicalRetrievalMethodConfig
-                value={retrievalConfig}
-                onChange={setRetrievalConfig}
-              />
-            )}
+          <RetrievalMethodConfig
+            value={retrievalConfig}
+            onChange={setRetrievalConfig}
+          />
         </div>
       </div>
       <div className={rowClass}>

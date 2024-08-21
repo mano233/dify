@@ -3,12 +3,7 @@ import { useShallow } from 'zustand/react/shallow'
 import NavLink from './navLink'
 import type { NavIcon } from './navLink'
 import AppBasic from './basic'
-import AppInfo from './app-info'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
-import {
-  AlignLeft01,
-  AlignRight01,
-} from '@/app/components/base/icons/src/vender/line/layout'
 import { useStore as useAppStore } from '@/app/components/app/store'
 
 export type IAppDetailNavProps = {
@@ -59,9 +54,6 @@ const AppDetailNav = ({ title, desc, icon, icon_background, navigation, extraInf
           ${expand ? 'p-3' : 'p-2'}
         `}
       >
-        {iconType === 'app' && (
-          <AppInfo expand={expand} />
-        )}
         {iconType !== 'app' && (
           <AppBasic
             mode={appSidebarExpand}
@@ -89,27 +81,7 @@ const AppDetailNav = ({ title, desc, icon, icon_background, navigation, extraInf
         })}
         {extraInfo && extraInfo(appSidebarExpand)}
       </nav>
-      {
-        !isMobile && (
-          <div
-            className={`
-              shrink-0 py-3
-              ${expand ? 'px-6' : 'px-4'}
-            `}
-          >
-            <div
-              className='flex items-center justify-center w-6 h-6 text-gray-500 cursor-pointer'
-              onClick={() => handleToggle(appSidebarExpand)}
-            >
-              {
-                expand
-                  ? <AlignLeft01 className='w-[14px] h-[14px]' />
-                  : <AlignRight01 className='w-[14px] h-[14px]' />
-              }
-            </div>
-          </div>
-        )
-      }
+
     </div>
   )
 }
