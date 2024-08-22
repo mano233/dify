@@ -2,20 +2,17 @@
 import type { FC } from 'react'
 import React, { useState } from 'react'
 import useSWR from 'swr'
-import { ArrowLeftIcon } from '@heroicons/react/24/solid'
 import { createContext, useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import { omit } from 'lodash-es'
-import { OperationAction, StatusItem } from '../list'
-import s from '../style.module.css'
+import { StatusItem } from '../list'
 import Completed from './completed'
 import Embedding from './embedding'
 import SegmentAdd, { ProcessStatus } from './segment-add'
 import BatchModal from './batch-modal'
 import style from './style.module.css'
 import cn from '@/utils/classnames'
-import Divider from '@/app/components/base/divider'
 import Loading from '@/app/components/base/loading'
 import type { MetadataType } from '@/service/datasets'
 import { checkSegmentBatchImportProgress, fetchDocumentDetail, segmentBatchImport } from '@/service/datasets'
@@ -141,21 +138,21 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
                 showBatchModal={showBatchModal}
               />
             )}
-            <OperationAction
-              scene='detail'
-              embeddingAvailable={embeddingAvailable}
-              detail={{
-                name: documentDetail?.name || '',
-                enabled: documentDetail?.enabled || false,
-                archived: documentDetail?.archived || false,
-                id: documentId,
-                data_source_type: documentDetail?.data_source_type || '',
-                doc_form: documentDetail?.doc_form || '',
-              }}
-              datasetId={datasetId}
-              onUpdate={handleOperate}
-              className='!w-[216px]'
-            />
+            {/* <OperationAction */}
+            {/*  scene='detail' */}
+            {/*  embeddingAvailable={embeddingAvailable} */}
+            {/*  detail={{ */}
+            {/*    name: documentDetail?.name || '', */}
+            {/*    enabled: documentDetail?.enabled || false, */}
+            {/*    archived: documentDetail?.archived || false, */}
+            {/*    id: documentId, */}
+            {/*    data_source_type: documentDetail?.data_source_type || '', */}
+            {/*    doc_form: documentDetail?.doc_form || '', */}
+            {/*  }} */}
+            {/*  datasetId={datasetId} */}
+            {/*  onUpdate={handleOperate} */}
+            {/*  className='!w-[216px]' */}
+            {/* /> */}
           </div>
         </div>
         <div className='flex flex-row flex-1' style={{ height: 'calc(100% - 4rem)' }}>
@@ -175,11 +172,11 @@ const DocumentDetail: FC<Props> = ({ datasetId, documentId }) => {
             </div>
           }
           <FloatRightContainer showClose isOpen={showMetadata} onClose={() => setShowMetadata(false)} isMobile={isMobile} panelClassname='!justify-start' footer={null}>
-            {/*<Metadata*/}
-            {/*  docDetail={{ ...documentDetail, ...documentMetadata, doc_type: documentMetadata?.doc_type === 'others' ? '' : documentMetadata?.doc_type } as any}*/}
-            {/*  loading={isMetadataLoading}*/}
-            {/*  onUpdate={metadataMutate}*/}
-            {/*/>*/}
+            {/* <Metadata */}
+            {/*  docDetail={{ ...documentDetail, ...documentMetadata, doc_type: documentMetadata?.doc_type === 'others' ? '' : documentMetadata?.doc_type } as any} */}
+            {/*  loading={isMetadataLoading} */}
+            {/*  onUpdate={metadataMutate} */}
+            {/* /> */}
           </FloatRightContainer>
         </div>
         <BatchModal

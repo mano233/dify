@@ -1,25 +1,17 @@
 'use client'
 import type { FC, SVGProps } from 'react'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useBoolean } from 'ahooks'
-import { ArrowDownIcon, CheckCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
-import {
-  RiQuestionLine,
-} from '@remixicon/react'
+import React, { useEffect, useState } from 'react'
+import { CheckCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
+
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import s from './style.module.css'
 import Button from '@/app/components/base/button'
 import cn from '@/utils/classnames'
 import Divider from '@/app/components/base/divider'
-import Tooltip from '@/app/components/base/tooltip'
 import Indicator from '@/app/components/header/indicator'
 import { formatNumber } from '@/utils/format'
-import ProgressBar from '@/app/components/base/progress-bar'
-import {
-  DataSourceType,
-} from '@/models/datasets'
+
 import useTimestamp from '@/hooks/use-timestamp'
 import TagSelector from '@/app/components/base/tag-management/selector'
 import type { Tag } from '@/app/components/base/tag-management/constant'
@@ -136,7 +128,7 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
     e.stopPropagation()
   }
 
-  const handleSaveTags = (tags: string[]) => {
+  const handleSaveTags = (tags: Tag[]) => {
     console.log(`用户保存标签${tags}`)
   }
 
@@ -163,7 +155,6 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
         </thead>
         <tbody className="text-gray-700">
           {localDocs.map((member) => {
-            const [tags, setTags] = useState<Tag[]>(member.tags)
             const onSuccess = () => {
               console.log('ssss')
             }
@@ -173,9 +164,9 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
               <td className='text-left align-middle  text-xs'>{member.id}</td>
               <td>{member.name}</td>
               <td>
-                <TagSelector value={tags.map(tag => tag.id)} type={'knowledge'}
+                <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
                   selectedTags={member.tags}
-                  onCacheUpdate={setTags}
+                  onCacheUpdate={handleSaveTags}
                   onChange={onSuccess} targetID={member.id}/>
               </td>
               <td className='text-gray-500 text-[13px]'>

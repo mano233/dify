@@ -43,17 +43,17 @@ const Layout: FC = () => {
     if (isCurrentWorkspaceDatasetOperator)
       return router.replace('/datasets')
   }, [isCurrentWorkspaceDatasetOperator, router])
-  const [mems, setMems] = useState([])
+  const [myMembers, setMyMembers] = useState([])
   useEffect(() => {
-    get('/my-members').then((data) => {
-      console.log(data)
+    get('/my-members').then((data: any) => {
+      setMyMembers(data)
     })
   }, [])
   return (
     <div className={'w-full h-full flex justify-center'}>
       <div className={'rounded-lg rounded-b bg-components-card-bg p-4 h-full'}
         style={{ width: '80%' }}>
-        <MembersList embeddingAvailable={true} documents={mems} datasetId={''} onUpdate={() => {
+        <MembersList embeddingAvailable={true} documents={myMembers} datasetId={''} onUpdate={() => {
           router.refresh()
         }}/>
       </div>
