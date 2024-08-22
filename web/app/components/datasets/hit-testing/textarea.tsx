@@ -63,31 +63,9 @@ const TextAreaWithButton = ({
     _onSubmit && _onSubmit()
   }
 
-  const retrievalMethod = isEconomy ? RETRIEVE_METHOD.invertedIndex : retrievalConfig.search_method
-  const Icon = getIcon(retrievalMethod)
   return (
     <>
       <div className={s.wrapper}>
-        <div className='pt-2 rounded-tl-xl rounded-tr-xl bg-[#EEF4FF]'>
-          <div className="px-4 pb-2 flex justify-between h-8 items-center">
-            <span className="text-gray-800 font-semibold text-sm">
-              {t('datasetHitTesting.input.title')}
-            </span>
-            <Tooltip
-              selector={'change-retrieval-method'}
-              htmlContent={t('dataset.retrieval.changeRetrievalMethod')}
-            >
-              <div
-                onClick={onClickRetrievalMethod}
-                className='flex px-2 h-7 items-center space-x-1 bg-white hover:bg-[#ECE9FE] rounded-md shadow-sm cursor-pointer text-[#6927DA]'
-              >
-                <Icon className='w-3.5 h-3.5'></Icon>
-                <div className='text-xs font-medium'>{t(`dataset.retrieval.${retrievalMethod}.title`)}</div>
-              </div>
-            </Tooltip>
-          </div>
-          <div className='h-2 rounded-tl-xl rounded-tr-xl bg-white'></div>
-        </div>
         <div className='px-4 pb-11'>
           <textarea
             value={text}

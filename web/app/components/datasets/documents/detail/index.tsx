@@ -38,7 +38,7 @@ type DocumentTitleProps = {
 export const DocumentTitle: FC<DocumentTitleProps> = ({ extension, name, iconCls, textCls, wrapperCls }) => {
   const localExtension = extension?.toLowerCase() || name?.split('.')?.pop()?.toLowerCase()
   return <div className={cn('flex items-center justify-start flex-1', wrapperCls)}>
-    <div className={cn(s[`${localExtension || 'txt'}Icon`], style.titleIcon, iconCls)}></div>
+    <div className={cn('txtIcon', style.titleIcon, iconCls)}></div>
     <span className={cn('font-semibold text-lg text-gray-900 ml-1', textCls)}> {name || '--'}</span>
   </div>
 }

@@ -15,7 +15,7 @@ import {
 import Link from 'next/link'
 import s from './style.module.css'
 import classNames from '@/utils/classnames'
-import { fetchDatasetDetail, fetchDatasetRelatedApps } from '@/service/datasets'
+import { fetchDatasetDetail } from '@/service/datasets'
 import type { RelatedApp, RelatedAppResponse } from '@/models/datasets'
 import AppSideBar from '@/app/components/app-sidebar'
 import AppIcon from '@/app/components/base/app-icon'
@@ -124,12 +124,6 @@ const DatasetDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     url: 'fetchDatasetDetail',
     datasetId,
   }, apiParams => fetchDatasetDetail(apiParams.datasetId))
-
-  const { data: relatedApps } = useSWR({
-    action: 'fetchDatasetRelatedApps',
-    datasetId,
-  }, apiParams => fetchDatasetRelatedApps(apiParams.datasetId))
-
   const navigation = [
     { name: t('common.datasetMenus.hitTesting'), href: `/datasets/${datasetId}/hitTesting`, icon: TargetIcon, selectedIcon: TargetSolidIcon },
     // { name: 'api & webhook', href: `/datasets/${datasetId}/api`, icon: CommandLineIcon, selectedIcon: CommandLineSolidIcon },

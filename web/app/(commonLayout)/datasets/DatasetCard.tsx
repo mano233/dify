@@ -114,7 +114,7 @@ const DatasetCard = ({
         data-disable-nprogress={true}
         onClick={(e) => {
           e.preventDefault()
-          push('/datasets/bb2026f9-8fa2-485c-beb5-06d436d37aac/documents/7e733d2a-c78d-42fe-a9fb-d680c49e499d')
+          push(`/datasets/${dataset.id || 1}/documents/${dataset.id || 1}`)
         }}
       >
         <div className='flex pt-[14px] px-[14px] pb-3 h-[66px] items-center gap-3 grow-0 shrink-0'>

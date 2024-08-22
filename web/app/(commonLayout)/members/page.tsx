@@ -1,45 +1,30 @@
 'use client'
 import type { FC } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import React, { useEffect } from 'react'
+import { window } from 'd3-selection'
 import { useAppContext } from '@/context/app-context'
+import type { Member } from '@/app/components/members/list'
 import MembersList from '@/app/components/members/list'
-import { DataSourceType } from '@/models/datasets'
+import TagManagementModal from '@/app/components/base/tag-management'
+import { useStore as useTagStore } from '@/app/components/base/tag-management/store'
+import { get } from '@/service/base'
 
-const mockList: any = [
+const mockList: Member[] = [
   {
-    enabled: false,
-    word_count: 122,
-    archived: false,
-    updated_at: 0,
-    hit_count: 123,
-    id: '1',
-    batch: 'sss',
-    position: 1,
-    dataset_id: 'ssss',
-    data_source_type: DataSourceType.FILE,
-    data_source_info: {
-      upload_file: {
-        id: '1122',
-        name: '文件名称',
-        size: 1231,
-        mime_type: 'application/json',
-        created_at: 0,
-        created_by: '',
-        extension: '',
+    id: 'sdsadsadsa',
+    name: '在jam环境是吗',
+    status: 'waiting',
+    tags: [
+      {
+        id: 'ssss',
+        name: 'sss',
+        type: 'knowledge',
+        binding_count: 1,
       },
-      job_id: '1',
-      url: 'http://',
-    },
-    dataset_process_rule_id: 'is12',
-    name: '测试文件',
-    created_from: 'api',
-    created_by: '1',
-    created_at: 0,
-    indexing_status: 'waiting',
-    display_status: 'queuing',
-    doc_form: 'qa_model',
+    ],
+    apply_time: 0,
   },
 ]
 
@@ -47,26 +32,34 @@ const Layout: FC = () => {
   const { t } = useTranslation()
   const router = useRouter()
   const { isCurrentWorkspaceDatasetOperator } = useAppContext()
-
+  const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
   useEffect(() => {
     if (typeof window !== 'undefined')
       document.title = `${t('tools.title')} - Dify`
     if (isCurrentWorkspaceDatasetOperator)
       return router.replace('/datasets')
   }, [isCurrentWorkspaceDatasetOperator, router, t])
-
   useEffect(() => {
     if (isCurrentWorkspaceDatasetOperator)
       return router.replace('/datasets')
   }, [isCurrentWorkspaceDatasetOperator, router])
-
+  const [mems, setMems] = useState([])
+  useEffect(() => {
+    get('/my-members').then((data) => {
+      console.log(data)
+    })
+  }, [])
   return (
     <div className={'w-full h-full flex justify-center'}>
       <div className={'rounded-lg rounded-b bg-components-card-bg p-4 h-full'}
-           style={{width: '80%'}}>
-        <MembersList embeddingAvailable={false} documents={mockList || []} datasetId={'23133131'} onUpdate={() => {
+        style={{ width: '80%' }}>
+        <MembersList embeddingAvailable={true} documents={mems} datasetId={''} onUpdate={() => {
+          router.refresh()
         }}/>
       </div>
+      {showTagManagementModal && (
+        <TagManagementModal type='knowledge' show={showTagManagementModal} />
+      )}
     </div>
 
   )

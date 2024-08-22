@@ -8,7 +8,6 @@ import type {
 import {
   useLanguage,
   useUpdateModelList,
-  useUpdateModelProviders,
 } from '../hooks'
 import ModelIcon from '../model-icon'
 import ModelName from '../model-name'
@@ -37,7 +36,6 @@ const PopupItem: FC<PopupItemProps> = ({
   const { setShowModelModal } = useModalContext()
   const { modelProviders } = useProviderContext()
   const updateModelList = useUpdateModelList()
-  const updateModelProviders = useUpdateModelProviders()
   const currentProvider = modelProviders.find(provider => provider.provider === model.provider)!
   const handleSelect = (provider: string, modelItem: ModelItem) => {
     if (modelItem.status !== ModelStatusEnum.active)
@@ -52,8 +50,6 @@ const PopupItem: FC<PopupItemProps> = ({
         currentConfigurationMethod: ConfigurationMethodEnum.predefinedModel,
       },
       onSaveCallback: () => {
-        updateModelProviders()
-
         const modelType = model.models[0].model_type
 
         if (modelType)

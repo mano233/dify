@@ -3,7 +3,6 @@ import { useState } from 'react'
 import useSWR from 'swr'
 import { useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
-import FormGeneration from '../toolbox/moderation/form-generation'
 import Modal from '@/app/components/base/modal'
 import Button from '@/app/components/base/button'
 import EmojiPicker from '@/app/components/base/emoji-picker'
@@ -260,13 +259,6 @@ const ExternalDataToolModal: FC<ExternalDataToolModalProps> = ({
       {
         systemTypes.findIndex(t => t === localeData.type) < 0
         && currentProvider?.form_schema
-        && (
-          <FormGeneration
-            forms={currentProvider?.form_schema}
-            value={localeData.config}
-            onChange={handleDataExtraChange}
-          />
-        )
       }
       <div className='flex items-center justify-end mt-6'>
         <Button

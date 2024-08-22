@@ -5,7 +5,6 @@ import useSWR from 'swr'
 import { useEffect, useState } from 'react'
 import {
   fetchModelList,
-  fetchModelProviders,
   fetchSupportRetrievalMethods,
 } from '@/service/common'
 import {
@@ -80,7 +79,6 @@ type ProviderContextProviderProps = {
 export const ProviderContextProvider = ({
   children,
 }: ProviderContextProviderProps) => {
-  const { data: providersData } = useSWR('/workspaces/current/model-providers', fetchModelProviders)
   const fetchModelListUrlPrefix = '/workspaces/current/models/model-types/'
   const { data: textGenerationModelList } = useSWR(`${fetchModelListUrlPrefix}${ModelTypeEnum.textGeneration}`, fetchModelList)
   const { data: supportRetrievalMethods } = useSWR('/datasets/retrieval-setting', fetchSupportRetrievalMethods)
@@ -112,7 +110,7 @@ export const ProviderContextProvider = ({
 
   return (
     <ProviderContext.Provider value={{
-      modelProviders: providersData?.data || [],
+      modelProviders: [],
       textGenerationModelList: textGenerationModelList?.data || [],
       isAPIKeySet: !!textGenerationModelList?.data.some(model => model.status === ModelStatusEnum.active),
       supportRetrievalMethods: supportRetrievalMethods?.retrieval_method || [],

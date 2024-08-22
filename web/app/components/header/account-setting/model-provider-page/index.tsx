@@ -15,7 +15,6 @@ import {
 import {
   useDefaultModel,
   useUpdateModelList,
-  useUpdateModelProviders,
 } from './hooks'
 import { AlertTriangle } from '@/app/components/base/icons/src/vender/solid/alertsAndFeedback'
 import { useProviderContext } from '@/context/provider-context'
@@ -25,7 +24,6 @@ import { useEventEmitterContextContext } from '@/context/event-emitter'
 const ModelProviderPage = () => {
   const { t } = useTranslation()
   const { eventEmitter } = useEventEmitterContextContext()
-  const updateModelProviders = useUpdateModelProviders()
   const updateModelList = useUpdateModelList()
   const { data: textGenerationDefaultModel } = useDefaultModel(ModelTypeEnum.textGeneration)
   const { data: embeddingsDefaultModel } = useDefaultModel(ModelTypeEnum.textEmbedding)
@@ -67,8 +65,6 @@ const ModelProviderPage = () => {
         currentCustomConfigurationModelFixedFields: CustomConfigurationModelFixedFields,
       },
       onSaveCallback: () => {
-        updateModelProviders()
-
         if (configurateMethod === ConfigurationMethodEnum.predefinedModel) {
           provider.supported_model_types.forEach((type) => {
             updateModelList(type)

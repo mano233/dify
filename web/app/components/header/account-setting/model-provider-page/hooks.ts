@@ -22,7 +22,6 @@ import {
   fetchDefaultModal,
   fetchModelList,
   fetchModelProviderCredentials,
-  fetchModelProviders,
   getPayUrl,
 } from '@/service/common'
 import { useProviderContext } from '@/context/provider-context'
@@ -212,24 +211,4 @@ export const useAnthropicBuyQuota = () => {
   }
 
   return handleGetPayUrl
-}
-
-export const useModelProviders = () => {
-  const { data: providersData, mutate, isLoading } = useSWR('/workspaces/current/model-providers', fetchModelProviders)
-
-  return {
-    data: providersData?.data || [],
-    mutate,
-    isLoading,
-  }
-}
-
-export const useUpdateModelProviders = () => {
-  const { mutate } = useSWRConfig()
-
-  const updateModelProviders = useCallback(() => {
-    mutate('/workspaces/current/model-providers')
-  }, [mutate])
-
-  return updateModelProviders
 }

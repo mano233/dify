@@ -24,36 +24,14 @@ const RetrievalMethodConfig: FC<Props> = ({
   const { t } = useTranslation()
   const { supportRetrievalMethods } = useProviderContext()
   const { data: rerankDefaultModel } = useDefaultModel(ModelTypeEnum.rerank)
-  const value = (() => {
-    if (!passValue.reranking_model.reranking_model_name) {
-      return {
-        ...passValue,
-        reranking_model: {
-          reranking_provider_name: rerankDefaultModel?.provider.provider || '',
-          reranking_model_name: rerankDefaultModel?.model || '',
-        },
-      }
-    }
-    return passValue
-  })()
   return (
     <div className='space-y-2'>
       <RadioCard
         icon={<Semantic className='w-4 h-4 text-[#7839EE]' />}
         title={t('dataset.retrieval.semantic_search.title')}
         description={t('dataset.retrieval.semantic_search.description')}
-        isChosen={value.search_method === RETRIEVE_METHOD.semantic}
-        onChosen={() => onChange({
-          ...value,
-          search_method: RETRIEVE_METHOD.semantic,
-        })}
-        chosenConfig={
-          <RetrievalParamConfig
-            type={RETRIEVE_METHOD.semantic}
-            value={value}
-            onChange={onChange}
-          />
-        }
+        isChosen={true}
+        onChosen={()=>{}}
       />
     </div>
   )

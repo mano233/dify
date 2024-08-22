@@ -146,7 +146,7 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
               onClick={handleSave}
               disabled={loading}
             >
-              {t('common.operation.save')}
+              保存
             </Button>
           </>
         )}

@@ -188,23 +188,7 @@ const Form = () => {
           </a>
         </div>
       </div>
-      {indexMethod === 'high_quality' && (
-        <div className={rowClass}>
-          <div className={labelClass}>
-            <div>{t('datasetSettings.form.embeddingModel')}</div>
-          </div>
-          <div className='w-[480px]'>
-            <ModelSelector
-              triggerClassName=''
-              defaultModel={embeddingModel}
-              modelList={embeddingModelList}
-              onSelect={(model: DefaultModel) => {
-                setEmbeddingModel(model)
-              }}
-            />
-          </div>
-        </div>
-      )}
+
       {/* Retrieval Method Config */}
       <div className={rowClass}>
         <div className={labelClass}>

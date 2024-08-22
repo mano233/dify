@@ -38,7 +38,8 @@ const EmptyDatasetCreationModal = ({
     try {
       const dataset = await createEmptyDataset({ name: inputValue })
       onHide()
-      router.push(`/datasets/${dataset.id}/documents/212`)
+      router.refresh()
+      // router.push(`/datasets/${dataset.id}/documents/212`)
     }
     catch (err) {
       notify({ type: 'error', message: t('datasetCreation.stepOne.modal.failed') })

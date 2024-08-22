@@ -1,47 +1,28 @@
-/* eslint-disable no-mixed-operators */
 'use client'
 import type { FC, SVGProps } from 'react'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useBoolean, useDebounceFn } from 'ahooks'
-import { ArrowDownIcon, TrashIcon,CheckCircleIcon } from '@heroicons/react/24/outline'
-import { pick } from 'lodash-es'
+import { useBoolean } from 'ahooks'
+import { ArrowDownIcon, CheckCircleIcon, TrashIcon } from '@heroicons/react/24/outline'
 import {
-  RiMoreFill,
   RiQuestionLine,
 } from '@remixicon/react'
-import { useContext } from 'use-context-selector'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import s from './style.module.css'
-import RenameModal from './rename-modal'
 import Button from '@/app/components/base/button'
 import cn from '@/utils/classnames'
-import Switch from '@/app/components/base/switch'
 import Divider from '@/app/components/base/divider'
-import Popover from '@/app/components/base/popover'
-import Confirm from '@/app/components/base/confirm'
 import Tooltip from '@/app/components/base/tooltip'
-import { ToastContext } from '@/app/components/base/toast'
-import type { IndicatorProps } from '@/app/components/header/indicator'
 import Indicator from '@/app/components/header/indicator'
-import { asyncRunSafe } from '@/utils'
 import { formatNumber } from '@/utils/format'
-import { archiveDocument, deleteDocument, disableDocument, enableDocument, syncDocument, syncWebsite, unArchiveDocument } from '@/service/datasets'
-import NotionIcon from '@/app/components/base/notion-icon'
 import ProgressBar from '@/app/components/base/progress-bar'
 import {
-  DataSourceInfo,
   DataSourceType,
-  type DocumentDisplayStatus,
-  DocumentIndexingStatus,
-  type SimpleDocumentDetail
 } from '@/models/datasets'
-import type { CommonResponse } from '@/models/common'
 import useTimestamp from '@/hooks/use-timestamp'
-import TagSelector from "@/app/components/base/tag-management/selector";
-import Modal from "@/app/components/base/modal";
-
+import TagSelector from '@/app/components/base/tag-management/selector'
+import type { Tag } from '@/app/components/base/tag-management/constant'
 
 export const SettingsIcon = ({ className }: SVGProps<SVGElement>) => {
   return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className ?? ''}>
@@ -83,38 +64,25 @@ export const useIndexStatus = () => {
 
 // status item for list
 export const StatusItem: FC<{
-  status: DocumentDisplayStatus
+  status: string
   reverse?: boolean
   scene?: 'list' | 'detail'
   textCls?: string
   errorMessage?: string
 }> = ({ status, reverse = false, scene = 'list', textCls = '', errorMessage }) => {
-  const DOC_INDEX_STATUS_MAP = useIndexStatus()
-  const localStatus = status.toLowerCase() as keyof typeof DOC_INDEX_STATUS_MAP
+  const color = status === 'completed' ? 'green' : 'yellow'
+  const text = status === 'completed' ? '已通过' : '待审核'
   return <div className={
     cn('flex items-center',
       reverse ? 'flex-row-reverse' : '',
       scene === 'detail' ? s.statusItemDetail : '')
   }>
-    <Indicator color={DOC_INDEX_STATUS_MAP[localStatus]?.color as IndicatorProps['color']} className={reverse ? 'ml-2' : 'mr-2'} />
-    <span className={cn('text-gray-700 text-sm', textCls)}>{DOC_INDEX_STATUS_MAP[localStatus]?.text}</span>
-    {
-      errorMessage && (
-        <Tooltip
-          selector='dataset-document-detail-item-status'
-          htmlContent={
-            <div className='max-w-[260px] break-all'>{errorMessage}</div>
-          }
-        >
-          <RiQuestionLine className='ml-1 w-[14px] h-[14px] text-gray-700' />
-        </Tooltip>
-      )
-    }
+    <Indicator color={color} className={reverse ? 'ml-2' : 'mr-2'} />
+    <span className={cn('text-gray-700 text-sm', textCls)}>{text}</span>
   </div>
 }
 
 type OperationName = 'delete' | 'archive' | 'enable' | 'disable' | 'sync' | 'un_archive'
-
 
 export const renderTdValue = (value: string | number | null, isEmptyStyle = false) => {
   return (
@@ -134,10 +102,17 @@ const renderCount = (count: number | undefined) => {
   return `${formatNumber((count / 1000).toFixed(1))}k`
 }
 
-type LocalDoc = SimpleDocumentDetail & { percent?: number }
+export type Member = {
+  id: string
+  name: string
+  tags: Tag[]
+  apply_time: number
+  status: string
+}
+
 type IDocumentListProps = {
   embeddingAvailable: boolean
-  documents: LocalDoc[]
+  documents: Member[]
   datasetId: string
   onUpdate: () => void
 }
@@ -149,44 +124,22 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
   const { t } = useTranslation()
   const { formatTime } = useTimestamp()
   const router = useRouter()
-  const [localDocs, setLocalDocs] = useState<LocalDoc[]>(documents)
+  const [localDocs, setLocalDocs] = useState<Member[]>(documents)
   const [enableSort, setEnableSort] = useState(false)
 
   useEffect(() => {
     setLocalDocs(documents)
   }, [documents])
 
-  const onClickSort = () => {
-    setEnableSort(!enableSort)
-    if (!enableSort) {
-      const sortedDocs = [...localDocs].sort((a, b) => dayjs(a.created_at).isBefore(dayjs(b.created_at)) ? -1 : 1)
-      setLocalDocs(sortedDocs)
-    }
-    else {
-      setLocalDocs(documents)
-    }
-  }
-
-  const [currDocument, setCurrDocument] = useState<LocalDoc | null>(null)
-  const [isShowRenameModal, {
-    setTrue: setShowRenameModalTrue,
-    setFalse: setShowRenameModalFalse,
-  }] = useBoolean(false)
-  const handleShowRenameModal = useCallback((doc: LocalDoc) => {
-    setCurrDocument(doc)
-    setShowRenameModalTrue()
-  }, [setShowRenameModalTrue])
-  // const handleRenamed = useCallback(() => {
-  //   onUpdate()
-  // }, [onUpdate])
-  const handlePass = (e)=>{
+  const handlePass = (e) => {
     console.log('点击了通过按钮')
     e.stopPropagation()
   }
 
-  const handleSaveTags = (tags : string[]) => {
-    console.log('用户保存标签'+tags)
+  const handleSaveTags = (tags: string[]) => {
+    console.log(`用户保存标签${tags}`)
   }
+
   return (
     <div className='w-full h-full overflow-x-auto'>
       <table className={`min-w-[700px] max-w-full w-full border-collapse border-0 text-xs mt-3 ${s.documentTable}`}>
@@ -202,7 +155,6 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
             <td className='w-44'>
               <div className='flex justify-between items-center'>
                 申请时间
-                <ArrowDownIcon className={cn('h-3 w-3 stroke-current stroke-2 cursor-pointer', enableSort ? 'text-gray-500' : 'text-gray-300')} onClick={onClickSort} />
               </div>
             </td>
             <td className='w-40'>状态</td>
@@ -210,31 +162,27 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
           </tr>
         </thead>
         <tbody className="text-gray-700">
-          {localDocs.map((doc) => {
-            const isFile = doc.data_source_type === DataSourceType.FILE
-            const fileType = isFile ? doc.data_source_detail_dict?.upload_file.extension : ''
+          {localDocs.map((member) => {
+            const [tags, setTags] = useState<Tag[]>(member.tags)
+            const onSuccess = () => {
+              console.log('ssss')
+            }
             return <tr
-              key={doc.id}
+              key={member.id}
               className={'border-b border-gray-200 h-8 hover:bg-gray-50 cursor-pointer'}>
-              <td className='text-left align-middle text-gray-500 text-xs'>{doc.position}</td>
-              <td>{renderCount(doc.word_count)}</td>
+              <td className='text-left align-middle  text-xs'>{member.id}</td>
+              <td>{member.name}</td>
               <td>
-                <TagSelector targetID={'sss'} type={'knowledge'} value={['测试标签']} onCacheUpdate={() => {}} selectedTags={[{
-                  id: 's1',
-                  name: '测试标签',
-                  type: 'knowledge',
-                  binding_count: 1,
-                }]}/>
+                <TagSelector value={tags.map(tag => tag.id)} type={'knowledge'}
+                  selectedTags={member.tags}
+                  onCacheUpdate={setTags}
+                  onChange={onSuccess} targetID={member.id}/>
               </td>
               <td className='text-gray-500 text-[13px]'>
-                {formatTime(doc.created_at, t('datasetHitTesting.dateTimeFormat') as string)}
+                {formatTime(member.apply_time, t('datasetHitTesting.dateTimeFormat') as string)}
               </td>
               <td>
-                {
-                  (['indexing', 'splitting', 'parsing', 'cleaning'].includes(doc.indexing_status) && doc?.data_source_type === DataSourceType.NOTION)
-                    ? <ProgressBar percent={doc.percent || 0} />
-                    : <StatusItem status={doc.display_status} />
-                }
+                <StatusItem status={member.status} />
               </td>
               <td className='w-44'>
                 <div className={'flex items-center'}>

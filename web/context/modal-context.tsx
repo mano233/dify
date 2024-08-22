@@ -6,7 +6,6 @@ import { createContext, useContext, useContextSelector } from 'use-context-selec
 import { useRouter, useSearchParams } from 'next/navigation'
 import AccountSetting from '@/app/components/header/account-setting'
 import ApiBasedExtensionModal from '@/app/components/header/account-setting/api-based-extension-page/modal'
-import ModerationSettingModal from '@/app/components/app/configuration/toolbox/moderation/moderation-setting-modal'
 import ExternalDataToolModal from '@/app/components/app/configuration/tools/external-data-tool-modal'
 import AnnotationFullModal from '@/app/components/billing/annotation-full/modal'
 import ModelModal from '@/app/components/header/account-setting/model-provider-page/model-modal'
@@ -193,15 +192,6 @@ export const ModalContextProvider = ({
               data={showApiBasedExtensionModal.payload}
               onCancel={() => setShowApiBasedExtensionModal(null)}
               onSave={handleSaveApiBasedExtension}
-            />
-          )
-        }
-        {
-          !!showModerationSettingModal && (
-            <ModerationSettingModal
-              data={showModerationSettingModal.payload}
-              onCancel={handleCancelModerationSettingModal}
-              onSave={handleSaveModeration}
             />
           )
         }

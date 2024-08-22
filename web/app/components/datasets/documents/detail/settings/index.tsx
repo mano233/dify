@@ -26,7 +26,6 @@ const DocumentSettings = ({ datasetId, documentId }: DocumentSettingsProps) => {
   const [isShowSetAPIKey, { setTrue: showSetAPIKey, setFalse: hideSetAPIkey }] = useBoolean()
   const [hasError, setHasError] = useState(false)
   const { indexingTechnique, dataset } = useContext(DatasetDetailContext)
-  const { data: embeddingsDefaultModel } = useDefaultModel(ModelTypeEnum.textEmbedding)
 
   const saveHandler = () => router.push(`/datasets/${datasetId}/documents/${documentId}`)
 

@@ -8,7 +8,6 @@ import {
 } from '../declarations'
 import {
   useUpdateModelList,
-  useUpdateModelProviders,
 } from '../hooks'
 import PrioritySelector from './priority-selector'
 import PriorityUseTip from './priority-use-tip'
@@ -32,7 +31,6 @@ const CredentialPanel: FC<CredentialPanelProps> = ({
   const { notify } = useToastContext()
   const { eventEmitter } = useEventEmitterContextContext()
   const updateModelList = useUpdateModelList()
-  const updateModelProviders = useUpdateModelProviders()
   const customConfig = provider.custom_configuration
   const systemConfig = provider.system_configuration
   const priorityUseType = provider.preferred_provider_type
@@ -48,7 +46,6 @@ const CredentialPanel: FC<CredentialPanelProps> = ({
     })
     if (res.result === 'success') {
       notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
-      updateModelProviders()
 
       configurateMethods.forEach((method) => {
         if (method === ConfigurationMethodEnum.predefinedModel)
