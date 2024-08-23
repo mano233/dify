@@ -15,6 +15,7 @@ import { formatNumber } from '@/utils/format'
 import useTimestamp from '@/hooks/use-timestamp'
 import TagSelector from '@/app/components/base/tag-management/selector'
 import type { Tag } from '@/app/components/base/tag-management/constant'
+import {del, get, patch} from "@/service/base";
 
 export const SettingsIcon = ({ className }: SVGProps<SVGElement>) => {
   return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className ?? ''}>
@@ -123,13 +124,24 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
     setLocalDocs(documents)
   }, [documents])
 
-  const handlePass = (e) => {
-    console.log('点击了通过按钮')
-    e.stopPropagation()
+  const handlePass = (id: string) => {
+    const body = {
+      status: 'completed',
+    }
+    patch(`/my-members/${id}`, { body }).then(() => {
+      router.refresh()
+    })
+  }
+
+  const handleDel = (id: string) => {
+    del(`/my-members/${id}`).then(() => {
+      router.refresh()
+    })
   }
 
   const handleSaveTags = (tags: Tag[]) => {
     console.log(`用户保存标签${tags}`)
+    router.refresh()
   }
 
   return (
@@ -166,6 +178,7 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
               <td>
                 <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
                   selectedTags={member.tags}
+                  from={'member'}
                   onCacheUpdate={handleSaveTags}
                   onChange={onSuccess} targetID={member.id}/>
               </td>
@@ -177,12 +190,12 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
               </td>
               <td className='w-44'>
                 <div className={'flex items-center'}>
-                  <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass}>
+                  <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass.bind(this, member.id)}>
                     <CheckCircleIcon className={'w-3 h-3 stroke-current'} ></CheckCircleIcon>
                     通过
                   </Button>
                   <Divider type='vertical' className={'!bg-gray-400 !h-5'} />
-                  <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handlePass}>
+                  <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handleDel.bind(this, member.id)}>
                     <TrashIcon className={'w-3 h-3 stroke-current'} ></TrashIcon>
                     删除
                   </Button>

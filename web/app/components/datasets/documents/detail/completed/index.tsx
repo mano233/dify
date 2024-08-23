@@ -32,7 +32,9 @@ import Button from '@/app/components/base/button'
 import NewSegmentModal from '@/app/components/datasets/documents/detail/new-segment-modal'
 import TagInput from '@/app/components/base/tag-input'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
-
+import FileUpload from "@/app/components/base/features/feature-panel/file-upload";
+import './custom.css'
+import {post, upload} from "@/service/base";
 export const SegmentIndexTag: FC<{ positionId: string | number; className?: string }> = ({ positionId, className }) => {
   const localPositionId = useMemo(() => {
     const positionIdStr = String(positionId)
@@ -131,11 +133,29 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
     )
   }
 
+  function handleUpload(e: any) {
+    const file = e.target.files[0]
+    const formData = new FormData()
+    formData.set('file', file)
+    upload({
+      xhr: new XMLHttpRequest(),
+      data: formData,
+    }, true, '/upload')
+      .then((res) => {
+        setAnswer(`${answer}\n[${res.name}](${res.url})`)
+      })
+      .catch(() => {
+      })
+  }
   return (
     <div className={'flex flex-col relative'}>
       <div className='absolute right-0 top-0 flex items-center h-7'>
         {isEditing && (
           <>
+            <div className="upload-btn-wrapper">
+              <button className="btn disabled:btn-disabled btn-secondary btn-medium ">添加文件</button>
+              <input type="file" name="myfile" onChange={handleUpload}/>
+            </div>
             <Button
               onClick={handleCancel}>
               {t('common.operation.cancel')}
@@ -152,7 +172,8 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
         )}
         {!isEditing && !archived && embeddingAvailable && (
           <>
-            <div className='group relative flex justify-center items-center w-6 h-6 hover:bg-gray-100 rounded-md cursor-pointer'>
+            <div
+              className='group relative flex justify-center items-center w-6 h-6 hover:bg-gray-100 rounded-md cursor-pointer'>
               <div className={cn(s.editTip, 'hidden items-center absolute -top-10 px-3 h-[34px] bg-white rounded-lg whitespace-nowrap text-xs font-semibold text-gray-700 group-hover:flex')}>{t('common.operation.edit')}</div>
               <RiEditLine className='w-4 h-4 text-gray-500' onClick={() => setIsEditing(true)} />
             </div>

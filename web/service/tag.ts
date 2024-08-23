@@ -26,22 +26,24 @@ export const deleteTag = (tagID: string) => {
   return del(`/tags/${tagID}`)
 }
 
-export const bindTag = (tagIDList: string[], targetID: string, type: string) => {
+export const bindTag = (tagIDList: string[], targetID: string, type: string, from?: string) => {
   return post('/tag-bindings/create', {
     body: {
       tag_ids: tagIDList,
       target_id: targetID,
       type,
+      from,
     },
   })
 }
 
-export const unBindTag = (tagID: string, targetID: string, type: string) => {
+export const unBindTag = (tagID: string, targetID: string, type: string, from?: string) => {
   return post('/tag-bindings/remove', {
     body: {
       tag_id: tagID,
       target_id: targetID,
       type,
+      from,
     },
   })
 }

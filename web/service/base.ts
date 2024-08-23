@@ -459,10 +459,11 @@ export const upload = (options: any, isPublicAPI?: boolean, url?: string, search
     xhr.responseType = 'json'
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
-        if (xhr.status === 201)
-          resolve(xhr.response)
-        else
-          reject(xhr)
+        if (xhr.status === 201){
+            resolve(xhr.response)
+        } else {
+            reject(xhr)
+        }
       }
     }
     xhr.upload.onprogress = options.onprogress

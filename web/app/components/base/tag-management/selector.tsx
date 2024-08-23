@@ -15,12 +15,14 @@ import type { Tag } from '@/app/components/base/tag-management/constant'
 import Checkbox from '@/app/components/base/checkbox'
 import { bindTag, createTag, fetchTagList, unBindTag } from '@/service/tag'
 import { ToastContext } from '@/app/components/base/toast'
+import {router} from "next/client";
 
 type TagSelectorProps = {
   targetID: string
   isPopover?: boolean
   position?: 'bl' | 'br'
   type: 'knowledge' | 'app'
+  from?: 'member' | 'dataset'
   value: string[]
   selectedTags: Tag[]
   onCacheUpdate: (tags: Tag[]) => void
@@ -35,7 +37,7 @@ type PanelProps = {
 const Panel = (props: PanelProps) => {
   const { t } = useTranslation()
   const { notify } = useContext(ToastContext)
-  const { targetID, type, value, disableManager, selectedTags, onCacheUpdate, onChange, onCreate } = props
+  const { targetID, type, value, disableManager, selectedTags, from, onCacheUpdate, onChange, onCreate } = props
   const tagList = useTagStore(s => s.tagList)
   const setTagList = useTagStore(s => s.setTagList)
   const setShowTagManagementModal = useTagStore(s => s.setShowTagManagementModal)
@@ -79,7 +81,7 @@ const Panel = (props: PanelProps) => {
   }
   const bind = async (tagIDs: string[]) => {
     try {
-      await bindTag(tagIDs, targetID, type)
+      await bindTag(tagIDs, targetID, type, from)
       notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch (e: any) {
@@ -88,7 +90,7 @@ const Panel = (props: PanelProps) => {
   }
   const unbind = async (tagID: string) => {
     try {
-      await unBindTag(tagID, targetID, type)
+      await unBindTag(tagID, targetID, type, from)
       notify({ type: 'success', message: t('common.actionMsg.modifiedSuccessfully') })
     }
     catch (e: any) {
@@ -202,9 +204,10 @@ const Panel = (props: PanelProps) => {
 const TagSelector: FC<TagSelectorProps> = ({
                                              targetID,
                                              isPopover = true,
-                                             position,
-                                             type,
+  position,
+  type,
                                              value,
+                                             from,
                                              selectedTags,
                                              onCacheUpdate,
                                              onChange,
@@ -245,6 +248,7 @@ const TagSelector: FC<TagSelectorProps> = ({
               type={type}
               targetID={targetID}
               value={value}
+              from={from}
               selectedTags={selectedTags}
               onCacheUpdate={onCacheUpdate}
               onChange={onChange}
