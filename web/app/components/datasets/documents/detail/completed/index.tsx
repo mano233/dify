@@ -9,7 +9,6 @@ import {
   RiCloseLine,
   RiEditLine,
 } from '@remixicon/react'
-import { EditorState } from 'draft-js'
 import { StatusItem } from '../../list'
 import { DocumentContext } from '../index'
 import { ProcessStatus } from '../segment-add'
@@ -36,6 +35,9 @@ import { useEventEmitterContextContext } from '@/context/event-emitter'
 import './custom.css'
 import { upload } from '@/service/base'
 import MyEditor from '@/app/components/Editor'
+import {withHistory} from "slate-history";
+import {withReact} from "slate-react";
+import {createEditor} from "slate";
 export const SegmentIndexTag: FC<{ positionId: string | number; className?: string }> = ({ positionId, className }) => {
   const localPositionId = useMemo(() => {
     const positionIdStr = String(positionId)
@@ -84,7 +86,6 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
     else
       setLoading(false)
   })
-
   const handleCancel = () => {
     setIsEditing(false)
     setQuestion(segInfo?.content || '')
@@ -97,6 +98,12 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
 
   const renderContent = () => {
     if (segInfo?.answer) {
+      try {
+        JSON.parse(answer)
+      }
+      catch (e) {
+        return null
+      }
       return (
         <>
           <div className='mb-1 text-xs font-medium text-gray-500'>QUESTION</div>
@@ -109,15 +116,9 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
             disabled={!isEditing}
           />
           <div className='mb-1 text-xs font-medium text-gray-500'>ANSWER</div>
-          <AutoHeightTextarea
-            outerClassName='mb-4'
-            className='leading-6 text-md text-gray-800'
-            value={answer}
-            placeholder={t('datasetDocuments.segment.answerPlaceholder') || ''}
-            onChange={e => setAnswer(e.target.value)}
-            disabled={!isEditing}
-            autoFocus
-          />
+          <div style={{ width: '100%', overflow: 'auto' }}>
+            <MyEditor value={JSON.parse(answer)} read={!isEditing} onChange={(value: any) => setAnswer(JSON.stringify(value))}/>
+          </div>
         </>
       )
     }
@@ -133,30 +134,12 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
       />
     )
   }
-
-  function handleUpload(e: any) {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.set('file', file)
-    upload({
-      xhr: new XMLHttpRequest(),
-      data: formData,
-    }, true, '/upload')
-      .then((res) => {
-        setAnswer(`${answer}\n[${res.name}](${res.url})`)
-      })
-      .catch(() => {
-      })
-  }
+  
   return (
     <div className={'flex flex-col relative'}>
       <div className='absolute right-0 top-0 flex items-center h-7'>
         {isEditing && (
           <>
-            <div className="upload-btn-wrapper">
-              <button className="btn disabled:btn-disabled btn-secondary btn-medium ">添加文件</button>
-              <input type="file" name="myfile" onChange={handleUpload}/>
-            </div>
             <Button
               onClick={handleCancel}>
               {t('common.operation.cancel')}
@@ -187,9 +170,6 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
       </div>
       <SegmentIndexTag positionId={segInfo?.position || ''} className='w-fit mt-[2px] mb-6' />
       <div className={s.segModalContent}>{renderContent()}</div>
-      <div style={{ height: '100px', width: '100px', color: 'white', background: 'black' }}>
-        <MyEditor editorState={ EditorState.createEmpty()}/>
-      </div>
 
       <div className={s.keywordTitle}>{t('datasetDocuments.segment.keywords')}</div>
       <div className={s.keywordWrapper}>

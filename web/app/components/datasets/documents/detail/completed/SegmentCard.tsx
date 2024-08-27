@@ -72,6 +72,20 @@ const SegmentCard: FC<ISegmentCardProps> = ({
   const isDocScene = scene === 'doc'
   const [showModal, setShowModal] = useState(false)
 
+  const toText = (data: string) => {
+    let text = ''
+    try {
+      const values = JSON.parse(data)
+      for (const ele of values) {
+        if (ele.type === 'paragraph')
+          text += ele.children[0].text
+      }
+    }
+    catch {
+      text = ''
+    }
+    return text
+  }
   const renderContent = () => {
     if (answer) {
       return (
@@ -82,7 +96,7 @@ const SegmentCard: FC<ISegmentCardProps> = ({
           </div>
           <div className='flex'>
             <div className='mr-2 text-[13px] font-semibold text-gray-400'>A</div>
-            <div className='text-[13px]'>{answer}</div>
+            <div className='text-[13px]'>{toText(answer)}</div>
           </div>
         </>
       )

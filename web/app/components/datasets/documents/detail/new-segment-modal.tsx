@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import React, { memo, useState } from 'react'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useContext } from 'use-context-selector'
@@ -12,6 +12,7 @@ import { ToastContext } from '@/app/components/base/toast'
 import type { SegmentUpdator } from '@/models/datasets'
 import { addSegment } from '@/service/datasets'
 import TagInput from '@/app/components/base/tag-input'
+import MyEditor from "@/app/components/Editor";
 
 type NewSegmentModalProps = {
   isShow: boolean
@@ -88,13 +89,14 @@ const NewSegmentModal: FC<NewSegmentModalProps> = ({
             autoFocus
           />
           <div className='mb-1 text-xs font-medium text-gray-500'>ANSWER</div>
-          <AutoHeightTextarea
-            outerClassName='mb-4'
-            className='leading-6 text-md text-gray-800'
-            value={answer}
-            placeholder={t('datasetDocuments.segment.answerPlaceholder') || ''}
-            onChange={e => setAnswer(e.target.value)}
-          />
+          <div style={{ width: '100%', overflow: 'auto' }}>
+            <MyEditor value={[
+              {
+                type: 'paragraph',
+                children: [{ text: '' }],
+              },
+            ]} read={false} onChange={(value: any) => setAnswer(JSON.stringify(value))}/>
+          </div>
         </>
       )
     }

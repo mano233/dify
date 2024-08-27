@@ -10,7 +10,7 @@ import {
 import cn from '@/utils/classnames'
 import Confirm from '@/app/components/base/confirm'
 import { ToastContext } from '@/app/components/base/toast'
-import { checkIsUsedInApp, deleteDataset } from '@/service/datasets'
+import { deleteDataset } from '@/service/datasets'
 import type { DataSet } from '@/models/datasets'
 import Tooltip from '@/app/components/base/tooltip'
 import { Folder } from '@/app/components/base/icons/src/vender/solid/files'
@@ -42,15 +42,6 @@ const DatasetCard = ({
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [confirmMessage, setConfirmMessage] = useState<string>('')
   const detectIsUsedByApp = useCallback(async () => {
-    try {
-      const { is_using: isUsedByApp } = await checkIsUsedInApp(dataset.id)
-      setConfirmMessage(isUsedByApp ? t('dataset.datasetUsedByApp')! : t('dataset.deleteDatasetConfirmContent')!)
-    }
-    catch (e: any) {
-      const res = await e.json()
-      notify({ type: 'error', message: res?.message || 'Unknown error' })
-    }
-
     setShowConfirmDelete(true)
   }, [dataset.id, notify, t])
   const onConfirmDelete = useCallback(async () => {
