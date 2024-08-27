@@ -11,22 +11,6 @@ import TagManagementModal from '@/app/components/base/tag-management'
 import { useStore as useTagStore } from '@/app/components/base/tag-management/store'
 import { get } from '@/service/base'
 
-const mockList: Member[] = [
-  {
-    id: 'sdsadsadsa',
-    name: '在jam环境是吗',
-    status: 'waiting',
-    tags: [
-      {
-        id: 'ssss',
-        name: 'sss',
-        type: 'knowledge',
-        binding_count: 1,
-      },
-    ],
-    apply_time: 0,
-  },
-]
 
 const Layout: FC = () => {
   const { t } = useTranslation()

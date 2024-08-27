@@ -96,7 +96,7 @@ const renderCount = (count: number | undefined) => {
 }
 
 export type Member = {
-  id: string
+  openid: string
   name: string
   tags: Tag[]
   apply_time: number
@@ -171,16 +171,16 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
               console.log('ssss')
             }
             return <tr
-              key={member.id}
+              key={member.openid}
               className={'border-b border-gray-200 h-8 hover:bg-gray-50 cursor-pointer'}>
-              <td className='text-left align-middle  text-xs'>{member.id}</td>
+              <td className='text-left align-middle  text-xs'>{member.openid}</td>
               <td>{member.name}</td>
               <td>
                 <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
                   selectedTags={member.tags}
                   from={'member'}
                   onCacheUpdate={handleSaveTags}
-                  onChange={onSuccess} targetID={member.id}/>
+                  onChange={onSuccess} targetID={member.openid}/>
               </td>
               <td className='text-gray-500 text-[13px]'>
                 {formatTime(member.apply_time, t('datasetHitTesting.dateTimeFormat') as string)}
@@ -190,12 +190,12 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
               </td>
               <td className='w-44'>
                 <div className={'flex items-center'}>
-                  <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass.bind(this, member.id)}>
+                  <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass.bind(this, member.openid)}>
                     <CheckCircleIcon className={'w-3 h-3 stroke-current'} ></CheckCircleIcon>
                     通过
                   </Button>
                   <Divider type='vertical' className={'!bg-gray-400 !h-5'} />
-                  <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handleDel.bind(this, member.id)}>
+                  <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handleDel.bind(this, member.openid)}>
                     <TrashIcon className={'w-3 h-3 stroke-current'} ></TrashIcon>
                     删除
                   </Button>
