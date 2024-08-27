@@ -9,6 +9,7 @@ import {
   RiCloseLine,
   RiEditLine,
 } from '@remixicon/react'
+import { EditorState } from 'draft-js'
 import { StatusItem } from '../../list'
 import { DocumentContext } from '../index'
 import { ProcessStatus } from '../segment-add'
@@ -32,9 +33,9 @@ import Button from '@/app/components/base/button'
 import NewSegmentModal from '@/app/components/datasets/documents/detail/new-segment-modal'
 import TagInput from '@/app/components/base/tag-input'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
-import FileUpload from "@/app/components/base/features/feature-panel/file-upload";
 import './custom.css'
-import {post, upload} from "@/service/base";
+import { upload } from '@/service/base'
+import MyEditor from '@/app/components/Editor'
 export const SegmentIndexTag: FC<{ positionId: string | number; className?: string }> = ({ positionId, className }) => {
   const localPositionId = useMemo(() => {
     const positionIdStr = String(positionId)
@@ -186,6 +187,10 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
       </div>
       <SegmentIndexTag positionId={segInfo?.position || ''} className='w-fit mt-[2px] mb-6' />
       <div className={s.segModalContent}>{renderContent()}</div>
+      <div style={{ height: '100px', width: '100px', color: 'white', background: 'black' }}>
+        <MyEditor editorState={ EditorState.createEmpty()}/>
+      </div>
+
       <div className={s.keywordTitle}>{t('datasetDocuments.segment.keywords')}</div>
       <div className={s.keywordWrapper}>
         {!segInfo?.keywords?.length
@@ -401,7 +406,7 @@ const Completed: FC<ICompletedProps> = ({
   return (
     <>
       <div className={s.docSearchWrapper}>
-        <div className={s.totalText}>{total ? formatNumber(total) : '--'} {t('datasetDocuments.segment.paragraphs')}</div>
+        <div className={s.totalText}>{total ? formatNumber(total) : '/'} 个问答</div>
         <SimpleSelect
           onSelect={onChangeStatus}
           items={[

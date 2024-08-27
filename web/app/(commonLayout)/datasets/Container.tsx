@@ -1,7 +1,7 @@
 'use client'
 
 // Libraries
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useDebounceFn } from 'ahooks'
@@ -10,10 +10,7 @@ import useSWR from 'swr'
 // Components
 import Datasets from './Datasets'
 import DatasetFooter from './DatasetFooter'
-import ApiServer from './ApiServer'
-import TabSliderNew from '@/app/components/base/tab-slider-new'
 import SearchInput from '@/app/components/base/search-input'
-import TagManagementModal from '@/app/components/base/tag-management'
 import TagFilter from '@/app/components/base/tag-management/filter'
 
 // Services
@@ -63,28 +60,18 @@ const Container = () => {
   }
   return (
     <div ref={containerRef} className='grow relative flex flex-col bg-gray-100 overflow-y-auto'>
-      <div className='sticky top-0 flex justify-between pt-4 px-12 pb-2 leading-[56px] bg-gray-100 z-10 flex-wrap gap-y-2'>
-        <TabSliderNew
-          value={activeTab}
-          onChange={newActiveTab => setActiveTab(newActiveTab)}
-          options={options}
-        />
-        {activeTab === 'dataset' && (
-          <div className='flex items-center gap-2'>
-            <TagFilter type='knowledge' value={tagFilterValue} onChange={handleTagsChange} />
-            <SearchInput className='w-[200px]' value={keywords} onChange={handleKeywordsChange} />
-          </div>
-        )}
-        {activeTab === 'api' && data && <ApiServer apiBaseUrl={data.api_base_url || ''} />}
+      <div
+        className='sticky top-0 flex justify-between pt-4 px-12 pb-2 leading-[56px] bg-gray-100 z-10 flex-wrap gap-y-2'>
+        <div className='flex items-center gap-2'>
+          <TagFilter type='knowledge' value={tagFilterValue} onChange={handleTagsChange}/>
+          <SearchInput className='w-[200px]' value={keywords} onChange={handleKeywordsChange}/>
+        </div>
       </div>
 
-      {activeTab === 'dataset' && (
+      {(
         <>
-          <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords} />
-          <DatasetFooter />
-          {showTagManagementModal && (
-            <TagManagementModal type='knowledge' show={showTagManagementModal} />
-          )}
+          <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords}/>
+          <DatasetFooter/>
         </>
       )}
 
