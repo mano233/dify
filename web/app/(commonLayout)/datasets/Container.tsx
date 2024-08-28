@@ -12,6 +12,7 @@ import Datasets from './Datasets'
 import DatasetFooter from './DatasetFooter'
 import SearchInput from '@/app/components/base/search-input'
 import TagFilter from '@/app/components/base/tag-management/filter'
+import TagManagementModal from '@/app/components/base/tag-management'
 
 // Services
 import { fetchDatasetApiBaseUrl } from '@/service/datasets'
@@ -72,6 +73,9 @@ const Container = () => {
         <>
           <Datasets containerRef={containerRef} tags={tagIDs} keywords={searchKeywords}/>
           <DatasetFooter/>
+          {showTagManagementModal && (
+            <TagManagementModal type='knowledge' show={showTagManagementModal} />
+          )}
         </>
       )}
 
