@@ -10,12 +10,12 @@ import Button from '@/app/components/base/button'
 import cn from '@/utils/classnames'
 import Divider from '@/app/components/base/divider'
 import Indicator from '@/app/components/header/indicator'
-import { formatNumber } from '@/utils/format'
+import { formatNumber, formatTime } from '@/utils/format'
 
 import useTimestamp from '@/hooks/use-timestamp'
 import TagSelector from '@/app/components/base/tag-management/selector'
 import type { Tag } from '@/app/components/base/tag-management/constant'
-import {del, get, patch} from "@/service/base";
+import { del, patch } from '@/service/base'
 
 export const SettingsIcon = ({ className }: SVGProps<SVGElement>) => {
   return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className ?? ''}>
@@ -110,20 +110,12 @@ type IDocumentListProps = {
   onUpdate: () => void
 }
 
-/**
- * Document list component including basic information
- */
-const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [], datasetId }) => {
-  const { t } = useTranslation()
-  const { formatTime } = useTimestamp()
-  const router = useRouter()
-  const [localDocs, setLocalDocs] = useState<Member[]>(documents)
-  const [enableSort, setEnableSort] = useState(false)
-
+const MemberRow: FC<{ member: Member }> = ({ member }) => {
+  const [tags, setTags] = useState<Tag[]>(member.tags)
   useEffect(() => {
-    setLocalDocs(documents)
-  }, [documents])
-
+    setTags(member.tags)
+  }, [member])
+  const router = useRouter()
   const handlePass = (id: string) => {
     const body = {
       status: 'completed',
@@ -143,7 +135,59 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
     console.log(`用户保存标签${tags}`)
     router.refresh()
   }
+  return (
+    <>
+      <tr
+        key={member.openid}
+        className={'border-b border-gray-200 h-8 hover:bg-gray-50 cursor-pointer'}>
+        <td className='text-left align-middle  text-xs'>{member.openid}</td>
+        <td>{member.name}</td>
+        <td>
+          <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
+            selectedTags={member.tags}
+            from={'member'}
+            onCacheUpdate={handleSaveTags}
+            onChange={() => { router.refresh() }} targetID={member.openid}/>
+        </td>
+        <td className='text-gray-500 text-[13px]'>
+          {formatTime(member.apply_time)}
+        </td>
+        <td>
+          <StatusItem status={member.status} />
+        </td>
+        <td className='w-44'>
+          <div className={'flex items-center'}>
+            <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass.bind(this, member.openid)}>
+              <CheckCircleIcon className={'w-3 h-3 stroke-current'} ></CheckCircleIcon>
+            通过
+            </Button>
+            <Divider type='vertical' className={'!bg-gray-400 !h-5'} />
+            <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handleDel.bind(this, member.openid)}>
+              <TrashIcon className={'w-3 h-3 stroke-current'} ></TrashIcon>
+            删除
+            </Button>
 
+          </div>
+
+        </td>
+      </tr>
+    </>
+  )
+}
+
+/**
+ * Document list component including basic information
+ */
+const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [], datasetId }) => {
+  const { t } = useTranslation()
+  const { formatTime } = useTimestamp()
+  const router = useRouter()
+  const [localDocs, setLocalDocs] = useState<Member[]>(documents)
+  const [enableSort, setEnableSort] = useState(false)
+
+  useEffect(() => {
+    setLocalDocs(documents)
+  }, [documents])
   return (
     <div className='w-full h-full overflow-x-auto'>
       <table className={`min-w-[700px] max-w-full w-full border-collapse border-0 text-xs mt-3 ${s.documentTable}`}>
@@ -167,43 +211,7 @@ const MembersList: FC<IDocumentListProps> = ({ embeddingAvailable, documents = [
         </thead>
         <tbody className="text-gray-700">
           {localDocs.map((member) => {
-            const onSuccess = () => {
-              console.log('ssss')
-            }
-            return <tr
-              key={member.openid}
-              className={'border-b border-gray-200 h-8 hover:bg-gray-50 cursor-pointer'}>
-              <td className='text-left align-middle  text-xs'>{member.openid}</td>
-              <td>{member.name}</td>
-              <td>
-                <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
-                  selectedTags={member.tags}
-                  from={'member'}
-                  onCacheUpdate={handleSaveTags}
-                  onChange={onSuccess} targetID={member.openid}/>
-              </td>
-              <td className='text-gray-500 text-[13px]'>
-                {formatTime(member.apply_time, t('datasetHitTesting.dateTimeFormat') as string)}
-              </td>
-              <td>
-                <StatusItem status={member.status} />
-              </td>
-              <td className='w-44'>
-                <div className={'flex items-center'}>
-                  <Button size={'small'} variant={'primary'} className={'gap-1 '} onClick={handlePass.bind(this, member.openid)}>
-                    <CheckCircleIcon className={'w-3 h-3 stroke-current'} ></CheckCircleIcon>
-                    通过
-                  </Button>
-                  <Divider type='vertical' className={'!bg-gray-400 !h-5'} />
-                  <Button size={'small'} variant={'secondary'} className={'gap-1 hover:text-red-500'} onClick={handleDel.bind(this, member.openid)}>
-                    <TrashIcon className={'w-3 h-3 stroke-current'} ></TrashIcon>
-                    删除
-                  </Button>
-
-                </div>
-
-              </td>
-            </tr>
+            return <MemberRow member={member} key={member.openid}/>
           })}
         </tbody>
       </table>
