@@ -10,7 +10,10 @@ export const formatNumber = (num: number | string) => {
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return parts.join('.')
 }
-
+export function timestampToDate(timestamp: string | number | Date) {
+  const date = new Date(timestamp)
+  return date.toLocaleString()
+}
 export const formatFileSize = (num: number) => {
   if (!num)
     return num

@@ -33,11 +33,7 @@ import NewSegmentModal from '@/app/components/datasets/documents/detail/new-segm
 import TagInput from '@/app/components/base/tag-input'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
 import './custom.css'
-import { upload } from '@/service/base'
 import MyEditor from '@/app/components/Editor'
-import {withHistory} from "slate-history";
-import {withReact} from "slate-react";
-import {createEditor} from "slate";
 export const SegmentIndexTag: FC<{ positionId: string | number; className?: string }> = ({ positionId, className }) => {
   const localPositionId = useMemo(() => {
     const positionIdStr = String(positionId)
@@ -134,7 +130,7 @@ const SegmentDetailComponent: FC<ISegmentDetailProps> = ({
       />
     )
   }
-  
+
   return (
     <div className={'flex flex-col relative'}>
       <div className='absolute right-0 top-0 flex items-center h-7'>
@@ -261,7 +257,7 @@ const Completed: FC<ICompletedProps> = ({
   }
 
   const getSegments = async (needLastId?: boolean) => {
-    const finalLastId = lastSegmentsRes?.data?.[lastSegmentsRes.data.length - 1]?.id || ''
+    const finalLastId = lastSegmentsRes?.data?.[lastSegmentsRes.data.length - 1]?.position || ''
     setLoading(true)
     const [e, res] = await asyncRunSafe<SegmentsResponse>(fetchSegments({
       datasetId,

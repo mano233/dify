@@ -10,7 +10,7 @@ import Button from '@/app/components/base/button'
 import cn from '@/utils/classnames'
 import Divider from '@/app/components/base/divider'
 import Indicator from '@/app/components/header/indicator'
-import { formatNumber, formatTime } from '@/utils/format'
+import { formatNumber, timestampToDate } from '@/utils/format'
 
 import useTimestamp from '@/hooks/use-timestamp'
 import TagSelector from '@/app/components/base/tag-management/selector'
@@ -141,7 +141,7 @@ const MemberRow: FC<{ member: Member }> = ({ member }) => {
         key={member.openid}
         className={'border-b border-gray-200 h-8 hover:bg-gray-50 cursor-pointer'}>
         <td className='text-left align-middle  text-xs'>{member.openid}</td>
-        <td>{member.name}</td>
+        <td className='text-[13px]'>{member.name}</td>
         <td>
           <TagSelector value={member.tags.map(tag => tag.id)} type={'knowledge'}
             selectedTags={member.tags}
@@ -150,7 +150,7 @@ const MemberRow: FC<{ member: Member }> = ({ member }) => {
             onChange={() => { router.refresh() }} targetID={member.openid}/>
         </td>
         <td className='text-gray-500 text-[13px]'>
-          {formatTime(member.apply_time)}
+          {timestampToDate(member.apply_time)}
         </td>
         <td>
           <StatusItem status={member.status} />
