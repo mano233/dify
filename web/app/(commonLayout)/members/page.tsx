@@ -33,7 +33,7 @@ const Layout: FC = () => {
   const [myMembers, setMyMembers] = useState([])
   const [page, setPage] = useState(0)
   const [total, setTotal] = useState<number>(0)
-  const limt = 3
+  const limt = 15
   useEffect(() => {
     get(`/my-members?page=${page}&limit=${limt}`).then((data: any) => {
       setMyMembers(data.data)
